@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs'
+//const fs = require("fs");
 
 export class ProductManager {
   constructor(path) {
@@ -54,7 +55,7 @@ export class ProductManager {
 
   async getProducts() {
     try {
-      const data = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
+      const data = JSON.parse(await fs.readFile(this.path, "utf-8"));
       return data;
     } catch (error) {
       console.log("🚀 ~ file: ProductManager.js:59 ~ ProductManager ~ getProducts ~ error:", error)
@@ -104,3 +105,6 @@ export class ProductManager {
 
 // export * from ProductManager;
 // //module.exports = ProductManager;
+
+// const productManager = new ProductManager("../products/products.json");
+// productManager.getProducts()
