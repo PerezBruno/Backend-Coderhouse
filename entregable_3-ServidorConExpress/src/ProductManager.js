@@ -54,7 +54,7 @@ export class ProductManager {
   async getProducts() {
     try {
       const data = JSON.parse(await fs.readFile(this.path, "utf-8"));
-      console.log("🚀 ~ file: ProductManager.js:60 ~ ProductManager ~ getProducts ~ data:", data)
+      //console.log("🚀 ~ file: ProductManager.js:60 ~ ProductManager ~ getProducts ~ data:", data)
       return data;
     } catch (error) {
       console.log("🚀 ~ file: ProductManager.js:59 ~ ProductManager ~ getProducts ~ error:", error)
