@@ -6,8 +6,6 @@ export class ProductManager {
     this.path = path;
     this.products = [];
     this.id = 11;
-    console.log("clase instanciada")
-    console.log(this.path)
   }
 
   async addProducts({ title, description, price, thumbnail, code, stock, id }) {
@@ -44,7 +42,7 @@ export class ProductManager {
         });
 
         this.id = this.id + 1;
-        await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+        await fs.writeFile(this.path, JSON.stringify(this.products));
       } catch (error) {
       console.log("🚀 ~ file: ProductManager.js:46 ~ ProductManager ~ addProducts ~ error:", error)
       }
@@ -56,6 +54,7 @@ export class ProductManager {
   async getProducts() {
     try {
       const data = JSON.parse(await fs.readFile(this.path, "utf-8"));
+      console.log("🚀 ~ file: ProductManager.js:60 ~ ProductManager ~ getProducts ~ data:", data)
       return data;
     } catch (error) {
       console.log("🚀 ~ file: ProductManager.js:59 ~ ProductManager ~ getProducts ~ error:", error)
@@ -64,7 +63,7 @@ export class ProductManager {
   }
 
   getProductById = async (id) => {
-    this.products = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
+    this.products = JSON.parse(await fs.readFile(this.path, "utf-8"));
     const resultadoId = this.products.find((e) => e.id === id);
     if (resultadoId) {
       return resultadoId;
@@ -82,7 +81,7 @@ export class ProductManager {
         ...data,
         id: id,
       };
-      await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+      await fs.writeFile(this.path, JSON.stringify(this.products));
       console.log("Producto editado correctamente");
     } catch (error) {
     console.log("🚀 ~ file: ProductManager.js:84 ~ ProductManager ~ updateProduct= ~ error:", error)
@@ -95,7 +94,7 @@ export class ProductManager {
         await fs.promises.readFile(this.path, "utf-8")
       );
       this.products = this.products.filter((prod) => prod.id !== id);
-      await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+      await fs.writeFile(this.path, JSON.stringify(this.products));
     } catch (error) {
       console.log("🚀 ~ file: ProductManager.js:99 ~ ProductManager ~ deleteProduct ~ error:", error);
     }
@@ -107,4 +106,4 @@ export class ProductManager {
 // //module.exports = ProductManager;
 
 // const productManager = new ProductManager("../products/products.json");
-// productManager.getProducts()
+// productManager.getProductById(3)
