@@ -45,14 +45,13 @@ export class Carts {
     try {
       let listCarts = JSON.parse(await fs.readFile(this.path, "utf-8"));
       const resultId = listCarts.find((e) => e.id === id);
-      console.log("🚀 ~ file: Carts.js:48 ~ Carts ~ getCartById ~ resultId:", resultId)
       let newObject = [];
-      for (let i in resultId.products)
+        if(resultId){
+          for (let i in resultId.products)
         newObject.push({
           quantity: resultId.products[i].quantity,
           product: await productManager.getProductById(resultId.products[i].product),
         });
-        if(resultId){
             return newObject
         }else {
             return { message: "Not found"}

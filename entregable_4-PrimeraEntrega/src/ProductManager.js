@@ -70,6 +70,7 @@ export class ProductManager {
         });
 
         await fs.writeFile(this.path, JSON.stringify(listProducts));
+        return { message: "El producto ha sido cargado correctamente" };
       } catch (error) {
         console.log(
           "🚀 ~ file: ProductManager.js:46 ~ ProductManager ~ addProducts ~ error:",
@@ -104,21 +105,37 @@ export class ProductManager {
   };
 
   updateProduct = async (id, data) => {
-    let listProducts = await this.getProducts()
+    let listProducts = await this.getProducts();
+
+
+
+    let productToUpdate = await this.getProductById(id);
+    let productoIndex = this.products.findIndex((e) => e.id === id);
+    let codeVerif = listProducts.find((e) => e.code === data.code);
+    if(!codeVerif){
     //let idProduct = listProducts.find((e) => e.id === id);
     try {
-      let productToUpdate = await this.getProductById(id);
-      let productoIndex = this.products.findIndex((e) => e.id === id);
+      // let productToUpdate = await this.getProductById(id);
+      // let productoIndex = this.products.findIndex((e) => e.id === id);
       listProducts[productoIndex] = {
         ...productToUpdate,
         ...data,
         id: id,
       };
       await fs.writeFile(this.path, JSON.stringify(listProducts));
-      return {message: "Producto actualizado correctamente"};
+      return { message: "Producto actualizado correctamente" };
     } catch (error) {
-    console.log("🚀 ~ file: ProductManager.js:120 ~ ProductManager ~ updateProduct= ~ error:", error)
+      console.log(
+        "🚀 ~ file: ProductManager.js:120 ~ ProductManager ~ updateProduct= ~ error:",
+        error
+      );
     }
+    }else{
+      return { message: "el valor del CODE ya se encuentra asignado a otro producto" };
+    }
+
+
+
   };
 
   deleteProduct = async (id) => {
