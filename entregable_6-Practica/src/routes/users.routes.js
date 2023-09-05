@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userModels } from "../models/users.models.js";
+import { usersModel } from "../models/users.models.js";
 
 class usersRoutes {
   path = "/users";
@@ -11,7 +11,7 @@ class usersRoutes {
   initUsersRoutes() {
     this.router.get(`${this.path}`, async (req, res) => {
       try {
-        const users = await userModels.find();
+        const users = await usersModel.find();
         res.status(200).send({
           message: "Get all users successfully",
           users: users,
@@ -31,7 +31,7 @@ class usersRoutes {
     this.router.get(`${this.path}/:userID`, async (req, res) => {
       const { userID } = req.params;
       try {
-        const user = await userModels.findById(userID);
+        const user = await usersModel.findById(userID);
         if (user) {
           res.status(200).send({
             message: `get user info to id ${userID} successfully`,
@@ -57,7 +57,7 @@ class usersRoutes {
     this.router.post(`${this.path}`, async (req, res) => {
       const { firstName, lastName, age, email, password } = req.body;
       try {
-        const newUser = await userModels.create({
+        const newUser = await usersModel.create({
           firstName,
           lastName,
           age,
@@ -86,7 +86,7 @@ class usersRoutes {
       const { userID } = req.params;
       const { firstName, lastName, age, email, password } = req.body;
       try {
-      const user = await userModels.findByIdAndUpdate(userID, { firstName, lastName, age, email, password });
+      const user = await usersModel.findByIdAndUpdate(userID, { firstName, lastName, age, email, password });
         if (user) {
           res.status(200).send({
             message: `updated user`,
@@ -110,7 +110,7 @@ class usersRoutes {
     this.router.delete(`${this.path}/:userID`, async (req, res) => {
       const { userID } = req.params;
         try {
-            const user = await userModels.findByIdAndDelete(userID);
+            const user = await usersModel.findByIdAndDelete(userID);
             if (user) {
               res.status(200).send({
                 message: `user whith id ${userID} removed successfully`,
