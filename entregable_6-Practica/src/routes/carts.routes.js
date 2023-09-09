@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { cartsModel } from "../models/carts.models.js";
-import { productsModel } from "../models/products.models.js";
+import { ProductsModel } from "../models/products.models.js";
 
 class cartsRoutes {
   path = "/carts";
@@ -55,7 +55,7 @@ class cartsRoutes {
     try {
         const cart = await cartsModel.findById(cartId)
         if (cart) {
-            const prod = await productsModel.findById(productId)
+            const prod = await ProductsModel.findById(productId)
             if (prod) {
                 const index = cart.products.findIndex(item => item.product == productId) 
                 if (index != -1) {
