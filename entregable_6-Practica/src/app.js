@@ -11,7 +11,8 @@ class App {
   app;
   port;
   server;
-  productsManager
+  productsManager;
+  products;
 
   constructor(routes, viewsRoutes) {
     this.app = express();
@@ -58,6 +59,7 @@ class App {
   }
 
 
+
   //iniciando Express
   async listen() {
     this.server = this.app.listen(this.port, () => {
@@ -68,23 +70,27 @@ class App {
     });
 
 
-
-    let products = await this.productsManager.getAllProducts()
-
-
-
     //configuración de socket.io
 
     const io = new Server(this.server);
-    
+
+    //const products = await this.productsManager.getAllProducts()
+    //TODO: me da error
+
     io.on(`connection`, async (socket) =>{
+
       console.log("Servidor socket.io conectado")
 
-      socket.emit('products', products);
+      // socket.emit('products', products);
+
+      // socket.on("addProd", async (prod) => await this.productsManager.addProducts(prod));
+
+      // socket.on("delProd", async (id) => await this.productsManager.deleteProductById(id) && console.log(id));
 
 
     })
   }
+
 
    initHandlebars() {
     this.app.engine("handlebars", engine());

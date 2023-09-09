@@ -12,10 +12,11 @@ class ViewsRoutes {
     this.initViewsRoutes();
   }
 
-  async initViewsRoutes() {
-    const productsList = await this.productsManager.getAllProducts();
+   initViewsRoutes() {
 
-    this.router.get("/products", (req, res) => {
+
+    this.router.get("/products", async (req, res) => {
+      const productsList = await this.productsManager.getAllProducts()
       const mappedProducts = productsList.map((prod) => {
         return {
           title: prod.title,
@@ -31,15 +32,16 @@ class ViewsRoutes {
       });
     });
 
-    this.router.get("/realtimeproducts", (req, res) => {
+
+    
+    this.router.get("/realtimeproducts", async (req, res) => {
       res.status(200).render("realTimeProducts", {
         title: "APP Coderhouse - Tiempo real",
       });
     });
 
     this.router.get(`/chat`, async (req, res) => {
-      console.log("es el chat");
-      res.render(`chat`);
+      res.status(200).render("chat");;
     });
   }
 }
