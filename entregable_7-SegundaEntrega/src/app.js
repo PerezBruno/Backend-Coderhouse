@@ -5,7 +5,7 @@ import { mongoDBconnection } from "./db/mongo.config.js";
 import { engine } from "express-handlebars";
 import path from "path";
 import { Server } from "socket.io"
-import ProductsManager from "./managers/productManagers.js";
+import ProductsManager from "./managers/productManager.js";
 
 class App {
   app;
