@@ -1,17 +1,11 @@
 import { Router } from "express";
-import { ProductsModel } from "../models/products.models.js"
+import { productsModel } from "../dao/models/products.models.js"
 
-class productsRoutes {
-  path = "/products";
-  router = Router();
+  const productsRoutes = Router();
 
-  constructor() {
-    this.initProductRoutes();
-  }
-  initProductRoutes() {
-    this.router.get(`${this.path}`, async (req, res) => {
+    productsRoutes.get(`/`, async (req, res) => {
       try {
-        const products = await ProductsModel.find();
+        const products = await productsModel.find();
         res.status(200).send({
           message: "Get all products successfully",
           products,
@@ -25,10 +19,10 @@ class productsRoutes {
       }
     });
 
-    this.router.get(`${this.path}/:productID`, async (req, res) => {
+    productsRoutes.get(`/:productID`, async (req, res) => {
       const { productID } = req.params;
       try {
-        const product = await ProductsModel.findById(productID);
+        const product = await productsModel.findById(productID);
         if (product) {
           res.status(200).send({
             message: `get product info to id ${productID} successfully`,
@@ -48,10 +42,10 @@ class productsRoutes {
       }
     });
 
-    this.router.post(`${this.path}`, async (req, res) => {
+    productsRoutes.post(`/`, async (req, res) => {
       const { title, description, price, thumbnail, code, stock, category } = req.body;
       try {
-        const newProduct = await ProductsModel.create({
+        const newProduct = await productsModel.create({
              title, description, price, thumbnail, code, stock, category 
             });
         res.status(200).send({
@@ -69,11 +63,11 @@ class productsRoutes {
 
 
 
-    this.router.put(`${this.path}/:productID`, async (req, res) => {
+    productsRoutes.put(`/:productID`, async (req, res) => {
       const { productID } = req.params;
       const { title, description, price, thumbnail, code, stock, category } = req.body;
       try {
-      const product = await ProductsModel.findByIdAndUpdate(productID, { title, description, price, thumbnail, code, stock, category });
+      const product = await productsModel.findByIdAndUpdate(productID, { title, description, price, thumbnail, code, stock, category });
         if (product) {
           res.status(200).send({
             message: `updated product`,
@@ -94,10 +88,10 @@ class productsRoutes {
     });
 
 
-    this.router.delete(`${this.path}/:productID`, async (req, res) => {
+    productsRoutes.delete(`/:productID`, async (req, res) => {
       const { productID } = req.params;
         try {
-            const product = await ProductsModel.findByIdAndDelete(productID);
+            const product = await productsModel.findByIdAndDelete(productID);
             if (product) {
               res.status(200).send({
                 message: `product whith id ${productID} removed successfully`,
@@ -115,8 +109,5 @@ class productsRoutes {
           });
         }
       });
-  }
-}
-
 
 export default productsRoutes

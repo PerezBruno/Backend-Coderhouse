@@ -1,11 +1,11 @@
 {
-  "name": "entregable_6-practica",
+  "name": "entregable_5-websocket",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/app.js"
   },
   "keywords": [],
   "author": "",

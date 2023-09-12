@@ -14,7 +14,6 @@ const productsSchema = new Schema({
     required: true,
   },
   thumbnail: {
-    type: String,
     default: [],
   },
   code: {
@@ -36,4 +35,4 @@ const productsSchema = new Schema({
   },
 });
 
-export const ProductsModel = model("products", productsSchema);
+export const productsModel = model("products", productsSchema);
