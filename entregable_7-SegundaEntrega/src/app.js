@@ -6,18 +6,22 @@ import { engine } from "express-handlebars";
 import path from "path";
 import { Server } from "socket.io"
 import ProductsManager from "./managers/productManager.js";
+import  ChatsManager  from "./managers/chatsManager.js"
+
 
 class App {
   app;
   port;
   server;
   productsManager;
+  chatsManager;
 
 
   constructor(routes, viewsRoutes) {
     this.app = express();
     this.port = 8080;
     this.productsManager = new ProductsManager()
+    this.chatsManager = new ChatsManager()
 
     this.connectToDatabase();
     this.initializeMiddlewares();
@@ -107,12 +111,15 @@ class App {
    //****canal de mensajes
    socket.on("message", async (data) => {
     try {
-      await chatsModel.create(data);
+      await this.chatsManager.addMessage(data);
+
+      //await chatsModel.create(data);
     } catch (error) {
       console.log("🚀 ~ file: app.js:67 ~ socket.on ~ error:", error)
       
     }
-    const info = await chatsModel.find();
+    //const info = await chatsModel.find();
+    const info = await this.chatsManager.getAllMessages();
     io.emit("messageLogs", info.reverse());
   });
 

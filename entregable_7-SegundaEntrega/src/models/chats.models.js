@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const chatsSchema = new Schema({
-    user:{
+    user: {
         type: String,
         required: true,
     },
@@ -9,6 +9,10 @@ const chatsSchema = new Schema({
         type: String,
         required: true,
     },
+    postTime: {
+        type: Date,
+        default: Date.now,
+    }
 });
 
 export const chatsModel = model("chats", chatsSchema);

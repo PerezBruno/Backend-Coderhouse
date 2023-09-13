@@ -24,8 +24,6 @@ const app = new App(
 app.listen();
 
 //TODO: falta:
-// poner fecha y hora a los mensajes del chat
-// hacer el chat
 // terminar todos los managers 
 // utilizar los managers en las rutas
 // agregar paginación
@@ -34,10 +32,8 @@ app.listen();
 // se podran ordenar por el precio de manera ascendente o descendente
 
 //agregar al cartsRoutes los siguientes endpoints:
-// DELETE "api/carts/:cid/products/:pid"  ==> eliminará del carrito el producto seleccionado
 // PUT "api/carts/:cid" ==> actualiza el carrito
 // PUT "api/carts/:cid/products/:pid" ==> actualiza sólo la cantidad del producto pasado por req.body
-//DELETE "api/carts/:cid" ==> elimina todos los productos del carrito seleccionado
 //aplicar populate
 
 //ver temas de views para productos ("/products"), con su respectiva paginación. cada producto debe tener un boton para agregar al carrito sin necesidad de abrir una pagina adicional

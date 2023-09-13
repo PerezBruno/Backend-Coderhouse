@@ -29,7 +29,17 @@ socket.on("messageLogs", (data) => {
   //let messages = "";
   log.innerHTML = "";
   for (const msg of data){
-    log.innerHTML += `${msg.user} dice: ${msg.message}</br>`
+    log.innerHTML += 
+    `<div class="container">
+       <div class="collection-list mt-4 row gx-0 gy-3" >
+        <div class="card " >
+                  <p class="mx-3 mt-2"><b>Usuario:</b> ${msg.user}</p>
+                  <p class="mx-3"><b>Mensaje:</b> ${msg.message}</p>
+                  <p class="mx-3"><b>Enviado:</b> ${msg.postTime}</p>
+          </div>
+        </div>
+      </div>
+    `
   }
   // data.forEach((msg) => {
   //   messages += `${msg.user} dice: ${msg.message}</br>`;
