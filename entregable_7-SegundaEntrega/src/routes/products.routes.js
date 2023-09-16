@@ -15,15 +15,9 @@ class productsRoutes {
   initProductRoutes() {
     this.router.get(`${this.path}`, async (req, res) => {
       try {
-        const products = await this.productManager.getAllProducts();
-        const limit = Number(req.query.limit)
-
-        if(limit) {
-          return res.status(200).send({
-            message: "Get all products successfully",
-            products: products.slice(0, limit)
-          });
-        } else 
+        let { limit, page, sort, category, status} = req.query;
+        
+        const products = await this.productManager.getAllProducts(limit, page, sort, status, category);
         return res.status(200).send({
           message: "Get all products successfully",
           products,

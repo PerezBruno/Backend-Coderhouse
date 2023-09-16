@@ -73,7 +73,7 @@ class cartsRoutes {
 
     })
 
-//DELETE "api/carts/:cid" ==> elimina todos los productos del carrito seleccionado
+//DELETE "/:cid" ==> elimina todos los productos del carrito seleccionado
     this.router.delete (`${this.path}/:cartId`, async (req, res)=>{
       const { cartId } = req.params
       try {
@@ -90,7 +90,7 @@ class cartsRoutes {
       }
     })
 
-    // DELETE "api/carts/:cid/products/:pid"  ==> eliminará del carrito el producto seleccionado
+    // DELETE "/:cid/products/:pid"  ==> eliminará del carrito el producto seleccionado
     this.router.delete (`${this.path}/:cartId/products/:productId`, async (req, res)=>{
       const { cartId, productId } = req.params
       try {
@@ -106,6 +106,41 @@ class cartsRoutes {
           error })
       }
     })
+
+
+
+// PUT "api/carts/:cid/products/:pid" ==> actualiza sólo la cantidad del producto pasado
+    this.router.put(`${this.path}/:cartId/products/:productId`, async (req, res)=>{
+      const { cartId, productId } = req.params
+      const { quantity } = req.body
+      try {
+        const result = await this.cartsManager.editQuantity(cartId, productId, quantity)
+        res.status(200).send({
+          message: `the quantity was successfully updated`,
+           product: result
+      })
+      } catch (error) {
+      console.log("🚀 ~ file: carts.routes.js:133 ~ cartsRoutes ~ this.router.put ~ error:", error)
+    
+      }
+})
+
+    // PUT "/:cid" ==> actualiza el carrito mediante un array
+
+    this.router.put(`${this.path}/:cartId`, async (req, res)=>{
+      const {cartId} = req.params
+      let arrayProducts = req.body
+      try {
+        let newListProducts = await this.cartsManager.insertArray(cartId, arrayProducts)
+        res.status(200).send({
+          message: `the cart was successfully updated`,
+           products: newListProducts
+      })
+       } catch (error) {
+        console.log("🚀 ~ file: carts.routes.js:140 ~ cartsRoutes ~ this.router.put ~ error:", error)
+        
+        }
+   })
 
   }
 }

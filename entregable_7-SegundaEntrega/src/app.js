@@ -83,7 +83,9 @@ class App {
 
   socket.on('products', async ()=>{
     const productsList = await this.productsManager.getAllProducts();
-    socket.emit('products', productsList);
+    console.log("🚀 ~ file: app.js:86 ~ App ~ socket.on ~ productsList:", productsList.docs)
+    
+    socket.emit('products', productsList.docs);
   })
 
   socket.on('addProd', async (newProd) => {

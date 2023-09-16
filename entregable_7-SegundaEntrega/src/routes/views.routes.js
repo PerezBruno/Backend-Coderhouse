@@ -14,22 +14,29 @@ class ViewsRoutes {
 
   async initViewsRoutes() {
 
-    this.router.get("/products", async (req, res) => {
-      const productsList = await this.productsManager.getAllProducts();
-      const mappedProducts = productsList.map((prod) => {
-        return {
-          title: prod.title,
-          description: prod.description,
-          price: prod.price,
-          code: prod.code,
-          stock: prod.stock,
-        };
+    this.router.get("/products/:limit?/:page?/:sort?/:status?/:category?", async (req, res) => {
+      let { limit, page, sort, category, status} = req.query;
+      try {
+        const paginatedProductsList = await this.productsManager.getAllProducts(limit, page, sort, category, status);
+        const mappedProducts = await paginatedProductsList.docs.map((prod) => {
+          return {
+            title: prod.title,
+            description: prod.description,
+            price: prod.price,
+            code: prod.code,
+            stock: prod.stock,
+          };
+        });
+        res.status(200).render("home", {
+          title: "APP Coderhouse - Lista de productos",
+          products: mappedProducts,
+          data: paginatedProductsList,
+        });
+
+      } catch (error) {
+        
+      }
       });
-      res.status(200).render("home", {
-        title: "APP Coderhouse - Lista de productos",
-        products: mappedProducts,
-      });
-    });
 
     this.router.get("/realtimeproducts", (req, res) => {
       res.status(200).render("realTimeProducts", {

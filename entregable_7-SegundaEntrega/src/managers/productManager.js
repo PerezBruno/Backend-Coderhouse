@@ -3,10 +3,20 @@ import { ProductsModel } from "../models/products.models.js";
 
 class ProductsManager {
 
-   async getAllProducts() {
+   async getAllProducts(limit=10, page=1, sort=null, status, category) {
+          let query;
+          if (!status && !category){
+             query = {}
+          }else if (status && !category){
+            query = {status:status}
+          }else if (!status && category){
+            query = {category: category}
+          }else{
+            query = {category: category, status:status}
+          }
+
         try {
-          const allProducts = await ProductsModel.find();
-    
+          const allProducts = await ProductsModel.paginate(query, {limit: limit, page: page, sort: {price: sort}});
           return allProducts;
         } catch (error) {
           console.log("🚀 ~ file: productManagers.js:12 ~ productsManager ~ getAllProducts= ~ error:", error)

@@ -19,8 +19,11 @@ const cartsSchema = new Schema({
       },
 });
 
-cartsSchema.pre("find", function () {
+
+
+cartsSchema.pre("findOne", function () {
   this.populate("products.product");
 });
+
 
 export const cartsModel = model("carts", cartsSchema);

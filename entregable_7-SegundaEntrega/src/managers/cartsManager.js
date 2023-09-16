@@ -76,6 +76,53 @@ class CartsManager{
         }
     }
 
+    async editQuantity(cartId, productId, quantity) {
+        try {
+            const cart = await cartsModel.findById(cartId)
+            if (cart) {
+                const prod = await this.productsManager.getProductById(productId)
+                if (prod) {
+                    const index = cart.products.findIndex(item => item.product == productId) 
+                    if (index != -1) {
+                        cart.products[index].quantity = quantity 
+                    } else {
+                        return ({message: 'index not found', })
+                    }
+                    const updateCart = await cartsModel.findByIdAndUpdate(cartId, cart) 
+                    return ({message:"the quantity was updated successfully"})
+                } else {
+                   return ({message: 'product not found', })
+                }
+            } else {
+                return ({ message: 'cart not found'})
+            }
+    
+        } catch (error) {
+        console.log("🚀 ~ file: CartsManager.js:101 ~ CartsManager ~ editQuantity ~ error:", error)
+        }
+      }
+
+      async insertArray(cartId, arrayProducts){
+        try {            
+            const arr = arrayProducts
+            const prod = await this.getProductInCartById(cartId)
+            console.log("🚀 ~ file: cartsManager.js:109 ~ CartsManager ~ insertArray ~ prod:", prod)
+            if(prod){
+                Object.keys(prod.products).forEach(key =>{
+                    console.log(key)
+                })
+                // let idProd = prod.
+                // arr.forEach(e => {
+                //     console.log(e.product)
+                // });
+            }
+            //console.log("🚀 ~ file: cartsManager.js:109 ~ CartsManager ~ insertArray ~ arr:", arr)
+        } catch (error) {
+            console.log("🚀 ~ file: cartsManager.js:110 ~ CartsManager ~ insertArray ~ error:", error)
+            
+        }
+      }
+
 }
 
 export default CartsManager
