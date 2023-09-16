@@ -8,7 +8,7 @@ import path from "path";
 import { Server } from "socket.io"
 
 
-const PORT = 8080;
+const PORT = 4000;
 const app = express();
 const pathJson = "./products/products.json"
 const productManager = new ProductManager(pathJson);
@@ -26,6 +26,7 @@ app.use(express.static(path.join(__dirname, "/public")))
 
 // instancio la clase Server (de Socket.io) con la conexion al puerto (server) como parámetro
 const io = new Server(server);
+console.log("🚀 ~ file: app.js:29 ~ server:", server)
 
 io.on('connection', async (socket)=>{
   console.log("Servidor socket.io conectado")
