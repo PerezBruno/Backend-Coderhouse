@@ -7,6 +7,10 @@ import path from "path";
 import { Server } from "socket.io"
 import ProductsManager from "./managers/productManager.js";
 import  ChatsManager  from "./managers/chatsManager.js"
+import cors from "cors";
+import corsConfig from "./config/cors.config.js";
+import { PORT } from "./config/config.js";
+
 
 
 class App {
@@ -19,7 +23,7 @@ class App {
 
   constructor(routes, viewsRoutes) {
     this.app = express();
-    this.port = 8080;
+    this.port = PORT;
     this.productsManager = new ProductsManager()
     this.chatsManager = new ChatsManager()
 
@@ -40,6 +44,7 @@ class App {
 
   //implementando midleweares
   initializeMiddlewares() {
+    this.app.use(cors(corsConfig));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.static(path.join(__dirname, "/public")))
