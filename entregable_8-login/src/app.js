@@ -2,6 +2,8 @@ import express from "express";
 import displayRoutes from "express-routemap";
 import { __dirname } from "./path.js";
 import { mongoDBconnection } from "./db/mongo.config.js";
+import session from "express-session"
+import sessionConfig from "./db/session.config.js";
 import { engine } from "express-handlebars";
 import path from "path";
 import { Server } from "socket.io"
@@ -21,7 +23,7 @@ class App {
   chatsManager;
 
 
-  constructor(routes, viewsRoutes) {
+  constructor(routes, viewsRoutes, sessionRoutes) {
     this.app = express();
     this.port = PORT;
     this.productsManager = new ProductsManager()
@@ -32,6 +34,7 @@ class App {
     this.initializeRoutes(routes);
     this.initHandlebars();
     this.initializeViewsRoutes(viewsRoutes)
+    this.initializeSessionRoutes(sessionRoutes)
   }
 
 
@@ -47,8 +50,8 @@ class App {
     this.app.use(cors(corsConfig));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(express.static(path.join(__dirname, "/public")))
-    //this.app.use("/static", express.static(`${__dirname}/public`));
+    this.app.use(express.static(path.join(__dirname, "/public")));
+    this.app.use(session(sessionConfig))
   }
 
 
@@ -66,6 +69,14 @@ class App {
         this.app.use(`/`, route.router);
       });
     }
+
+    //rutas de las sesiones
+    initializeSessionRoutes(sessionRoutes) {
+      sessionRoutes.forEach((route) => {
+        this.app.use(`/`, route.router);
+      });
+    }
+    
 
 
   //iniciando Express

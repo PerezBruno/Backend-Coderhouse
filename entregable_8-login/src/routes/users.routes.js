@@ -1,17 +1,20 @@
 import { Router } from "express";
-import { usersModel } from "../models/users.models.js";
+import { UsersModel } from "../models/users.models.js";
+import  UserManager  from "../managers/usersManager.js"
 
 class usersRoutes {
   path = "/users";
   router = Router();
+  userManager;
 
   constructor() {
+    this.userManager = new UserManager()
     this.initUsersRoutes();
   }
   initUsersRoutes() {
     this.router.get(`${this.path}`, async (req, res) => {
       try {
-        const users = await usersModel.find();
+        const users = await this.userManager.getAllUsers()
         res.status(200).send({
           message: "Get all users successfully",
           users: users,
@@ -28,18 +31,18 @@ class usersRoutes {
       }
     });
 
-    this.router.get(`${this.path}/:userID`, async (req, res) => {
-      const { userID } = req.params;
+    this.router.get(`${this.path}/:userId`, async (req, res) => {
+      const { userId } = req.params;
       try {
-        const user = await usersModel.findById(userID);
+        const user = await this.userManager.getUserById(userId);
         if (user) {
           res.status(200).send({
-            message: `get user info to id ${userID} successfully`,
+            message: `get user info to id ${userId} successfully`,
             users: user,
           });
         } else {
           res.status(404).send({
-            message: `user with id ${userID} not found`,
+            message: `user with id ${userId} not found`,
           });
         }
       } catch (error) {
@@ -55,15 +58,11 @@ class usersRoutes {
     });
 
     this.router.post(`${this.path}`, async (req, res) => {
-      const { firstName, lastName, age, email, password } = req.body;
+      const { first_name, last_name, age, email, password } = req.body;
       try {
-        const newUser = await usersModel.create({
-          firstName,
-          lastName,
-          age,
-          email,
-          password,
-        });
+        const newUser = await this.userManager.addUser(
+         { first_name, last_name, age, email, password }
+        );
         res.status(200).send({
           message: "user loaded successfully",
           users: newUser,
@@ -86,7 +85,7 @@ class usersRoutes {
       const { userID } = req.params;
       const { firstName, lastName, age, email, password } = req.body;
       try {
-      const user = await usersModel.findByIdAndUpdate(userID, { firstName, lastName, age, email, password });
+      const user = await UsersModel.findByIdAndUpdate(userID, { firstName, lastName, age, email, password });
         if (user) {
           res.status(200).send({
             message: `updated user`,
@@ -110,7 +109,7 @@ class usersRoutes {
     this.router.delete(`${this.path}/:userID`, async (req, res) => {
       const { userID } = req.params;
         try {
-            const user = await usersModel.findByIdAndDelete(userID);
+            const user = await UsersModel.findByIdAndDelete(userID);
             if (user) {
               res.status(200).send({
                 message: `user whith id ${userID} removed successfully`,

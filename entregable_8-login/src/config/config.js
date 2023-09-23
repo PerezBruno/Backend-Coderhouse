@@ -7,12 +7,11 @@ config({
 export const{
 NODE_ENV,
 PORT,
-API_VERSION,
 DB_HOST,
-DB_PORT,
 DB_NAME,
 DB_PASSWORD,
 DB_USER,
 DB_CNN,
 ORIGIN,
+S_SECRET,
 } = process.env
