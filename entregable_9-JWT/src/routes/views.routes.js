@@ -53,6 +53,10 @@ class ViewsRoutes {
     this.router.get("/login", async (req, res) => {
       res.render("login");
     });
+    
+    this.router.get("/register", async (req, res) => {
+      res.render("register");
+    });
 
     this.router.get("/profile", async (req, res) => {
       const user = req.session.user;
