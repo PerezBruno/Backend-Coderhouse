@@ -52,10 +52,11 @@ class UserManager {
     
     async findUserByEmail(email){
         try {
-            const user = await UsersModel.findOne({email: email})
+            const user = await UsersModel.findOne(email)
             return user
         } catch (error) {
-            console.log("🚀 ~ file: usersManager.js:58 ~ UserManager ~ getUserById ~ error:", error)
+        console.log("🚀 ~ file: usersManager.js:58 ~ UserManager ~ findUserByEmail ~ error:", error)
+
         }
     }
 }

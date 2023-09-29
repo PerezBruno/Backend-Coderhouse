@@ -1,5 +1,6 @@
 import { Router } from "express";
 import  UserManager  from "../managers/usersManager.js"
+import { createHashValue } from "../utils/bcrypt.js";
 
 class usersRoutes {
   path = "/users";
@@ -55,35 +56,6 @@ class usersRoutes {
         });
       }
     });
-
-    this.router.post(`${this.path}`, async (req, res) => {
-      const { first_name, last_name, age, email, password } = req.body;
-      try {
-        const newUser = await this.userManager.addUser(
-         { first_name, last_name, age, email, password }
-        );
-        if (newUser){
-          res.status(200).send({
-            message: "user loaded successfully",
-            users: newUser,
-          });
-        }else{
-          res.status(400).send({
-          message: "Duplicate key error",
-        });
-        }
-      } catch (error) {
-        console.log(
-          "🚀 ~ file: users.routes.js:67 ~ this.userRouter.post ~ error:",
-          error
-        );
-        res.status(400).send({
-          message: "error creating user",
-          error: error,
-        });
-      }
-    });
-
 
 
     this.router.put(`${this.path}/:userId`, async (req, res) => {

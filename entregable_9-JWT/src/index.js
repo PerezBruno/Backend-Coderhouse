@@ -28,6 +28,4 @@ app.listen();
 
 
 //TODO:
-// falta:
-// crear las rutas y demases para el login
-// llegue hasta 03:03:00 video clase 10
+//llegue hasta  03:27:00

@@ -4,6 +4,8 @@ import { __dirname } from "./path.js";
 import { mongoDBconnection } from "./db/mongo.config.js";
 import session from "express-session"
 import sessionConfig from "./db/session.config.js";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 import { engine } from "express-handlebars";
 import path from "path";
 import { Server } from "socket.io"
@@ -21,6 +23,7 @@ class App {
   server;
   productsManager;
   chatsManager;
+  initializePassport
 
 
   constructor(routes, viewsRoutes) {
@@ -28,6 +31,7 @@ class App {
     this.port = PORT;
     this.productsManager = new ProductsManager()
     this.chatsManager = new ChatsManager()
+    this.initializePassport = initializePassport()
 
     this.connectToDatabase();
     this.initializeMiddlewares();
@@ -44,13 +48,16 @@ class App {
   }
 
 
+
   //implementando midleweares
   initializeMiddlewares() {
     this.app.use(cors(corsConfig));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.static(path.join(__dirname, "/public")));
-    this.app.use(session(sessionConfig))
+    this.app.use(session(sessionConfig));
+    this.app.use(passport.initialize());
+    this.app.use(passport.session())
   }
 
 
@@ -91,7 +98,6 @@ class App {
 
   socket.on('products', async ()=>{
     const productsList = await this.productsManager.getAllProducts();
-    console.log("🚀 ~ file: app.js:86 ~ App ~ socket.on ~ productsList:", productsList.docs)
     
     socket.emit('products', productsList.docs);
   })

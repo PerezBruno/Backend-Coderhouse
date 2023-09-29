@@ -54,14 +54,25 @@ class ViewsRoutes {
       res.render("login");
     });
     
+    this.router.get("/faillogin", async (req, res) => {
+      res.render("faillogin");
+    });
+    
     this.router.get("/register", async (req, res) => {
       res.render("register");
     });
+    this.router.get("/failregister", async (req, res) =>{
+      res.render("failregister")
+    })
+
+    this.router.get("/recover", async (req, res) =>{
+      res.render("recover")
+    })
+
 
     this.router.get("/profile", async (req, res) => {
       const user = req.session.user;
-      console.log("🚀 ~ file: views.routes.js:16 ~ router.get ~ user:", user);
-      res.render("profile", {
+      res.redirect("/profile", {
         user,
       });
     });
