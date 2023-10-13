@@ -117,7 +117,7 @@ const initializePassport = () =>{
 
     passport.use(`jwt`, new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: JWT_SECRET
+        secretOrKey: `${JWT_SECRET}`
     }, async(jwt_payload, done) => {
         try {
             console.log("🚀 ~ file: passport.config.js:115 ~ initializePassport ~ jwt_payload:", jwt_payload)

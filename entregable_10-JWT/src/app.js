@@ -59,7 +59,7 @@ class App {
     this.app.use(session(sessionConfig));
     this.app.use(passport.initialize());
     this.app.use(passport.session())
-    this.app.use(cookieParser(`${SIGNED_COOKIE}`)) // La cookie esta firmada
+    this.app.use(cookieParser(SIGNED_COOKIE)) // La cookie esta firmada
   }
 
 
