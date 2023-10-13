@@ -1,24 +1,16 @@
 import local from 'passport-local'
-import passport from 'passport'
 import GithubStrategy from "passport-github2"
 import jwt from "passport-jwt"
+import passport from 'passport'
 import {createHashValue, validatePassword} from "../utils/bcrypt.js"
 import UserManager from "../managers/usersManager.js"
 import { CALLBACK_URL, CLIENT_ID, CLIENT_SECRET, JWT_SECRET } from './config.js'
 
 const LocalStrategi = local.Strategy;
-const JWTStrategi = jwt.Strategy;
-const ExtractJWT = jwt.ExtractJwt;
-const userManager = new UserManager()
+const userManager = new UserManager();
 
-
-    // extraigo la cookie
-    const cookieExtractor = req =>{
-        console.log("🚀 ~ file: passport.config.js:19 ~ cookieExtractor ~ req.cookies:", req.cookies)
-        const token = req.cookies.jwtCookie ? req.cookies.jwtCookie : {};
-        console.log("🚀 ~ file: passport.config.js:21 ~ cookieExtractor ~ token:", token)
-        return token
-    }
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;// para extraer el token de las cookies
 
 
 
@@ -27,20 +19,6 @@ const userManager = new UserManager()
 // TODO:**** done()=> el "primer parametro" es el error--- si no hay error es null
 // ****************   el "segunto parametro" suele ser el usuario que estoy generando. si es "false" es que el usuario ya existe...
 const initializePassport = () =>{
-
-    // estretegia con Passport - JWT
-    passport.use("jwt", new JWTStrategi({
-
-        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: JWT_SECRET,
-    }, async (jwt_payload, done) => {
-        try {
-            console.log("🚀 ~ file: passport.config.js:32 ~ initializePassport ~ jwt_payload:", jwt_payload)
-            return done(null, jwt_payload)
-        } catch (error) {
-            return done(error)
-        }
-    }))
 
     // estrategia Passport - local
     passport.use("register", new LocalStrategi({
@@ -119,6 +97,36 @@ const initializePassport = () =>{
         const user = await userManager.getUserById(id)
         done(null, user)
     })
+
+
+    //configuración de la estrategia JWT
+
+    const cookieExtractor = req => {
+        const token = req.cookies.jwtCookie ? req.cookies.jwtCookie : {}
+
+        console.log("cookieExtractor", token)
+
+        return token
+
+    }
+    // const cookieExtractor = req => {
+    //     const token = req.cookies.jwtCookie ? req.cookies.jwtCookie : {}
+    //     console.log("🚀 ~ file: passport.config.js:107 ~ cookieExtractor ~ token:", token)
+    //     return token
+    // }
+
+    passport.use(`jwt`, new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: JWT_SECRET
+    }, async(jwt_payload, done) => {
+        try {
+            console.log("🚀 ~ file: passport.config.js:115 ~ initializePassport ~ jwt_payload:", jwt_payload)
+            return done(null, jwt_payload)
+        } catch (error) {
+            console.log("🚀 ~ file: passport.config.js:118 ~ initializePassport ~ error:", error)
+            return done(error)
+        }
+    }))
 }
 
 export default initializePassport;

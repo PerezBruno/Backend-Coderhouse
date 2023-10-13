@@ -2,7 +2,7 @@ import { Router } from "express";
 import UserManager from "../managers/usersManager.js";
 import { createHashValue, validatePassword } from "../utils/bcrypt.js";
 import passport from "passport";
-import { generateJWT } from "../utils/jwt.js";
+//import { generateJWT } from "../utils/jwt.js";
 
 
 //Verifico si el usuario es admin o no
@@ -29,8 +29,8 @@ class SessionRoutes {
             if(!req.user){
               return res.status(401).json({message: "incorrect data"})
             }
-            const token = await generateJWT({email});
-            console.log("🚀 ~ file: session.routes.js:33 ~ SessionRoutes ~ this.router.post ~ email:", email)
+            //const token = await generateJWT({email});
+            //console.log("🚀 ~ file: session.routes.js:33 ~ SessionRoutes ~ this.router.post ~ email:", email)
 
             req.session.user = {
               role: req.user.role,
@@ -39,18 +39,18 @@ class SessionRoutes {
               email: req.user.email,
               age: req.user.age,
             }
-            res.cookie("cookieToken", token, {
-              maxAge: 12 * 360_000, //tiempo de expiración en milisegundos??? => sería 12 hs
-              httpOnly: true,
-            })
-            res.status(200).json({payload: req.user})
-            // res.render("profile", {
-            //   role: req.session?.user?.role || user.role,
-            //   first_name: req.session?.user?.first_name || user.first_name,
-            //   last_name: req.session?.user?.last_name || user.last_name,
-            //   email: req.session?.user?.email || email,
-            //   age: req.session?.user?.age || user.age,
-            // });
+            // res.cookie("cookieToken", token, {
+            //   maxAge: 12 * 360_000, //tiempo de expiración en milisegundos??? => sería 12 hs
+            //   httpOnly: true,
+            // })
+            //res.status(200).json({payload: req.user})
+            res.render("profile", {
+              role: req.session?.user?.role || user.role,
+              first_name: req.session?.user?.first_name || user.first_name,
+              last_name: req.session?.user?.last_name || user.last_name,
+              email: req.session?.user?.email || email,
+              age: req.session?.user?.age || user.age,
+            });
 
           } catch (error) {
             res.status(500).json({
@@ -149,10 +149,9 @@ class SessionRoutes {
           })
 
 
-          this.router.get(`${this.path}/current`, passport.authenticate('jwt', {session: false}, (req, res)=>{
-            res.send(req.user);
-          }));
-
+          this.router.get(`${this.path}/current`, passport.authenticate(`jwt`, {session:false}), (req, res)=>{
+            res.send(req.user)
+          })
 
     }
     

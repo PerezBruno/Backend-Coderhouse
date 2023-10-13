@@ -5,6 +5,7 @@ import { mongoDBconnection } from "./db/mongo.config.js";
 import session from "express-session"
 import sessionConfig from "./db/session.config.js";
 import passport from "passport";
+import cookieParser from "cookie-parser"
 import initializePassport from "./config/passport.config.js";
 import { engine } from "express-handlebars";
 import path from "path";
@@ -13,7 +14,7 @@ import ProductsManager from "./managers/productManager.js";
 import  ChatsManager  from "./managers/chatsManager.js"
 import cors from "cors";
 import corsConfig from "./config/cors.config.js";
-import { PORT } from "./config/config.js";
+import { PORT, SIGNED_COOKIE } from "./config/config.js";
 
 
 
@@ -58,6 +59,7 @@ class App {
     this.app.use(session(sessionConfig));
     this.app.use(passport.initialize());
     this.app.use(passport.session())
+    this.app.use(cookieParser(`${SIGNED_COOKIE}`)) // La cookie esta firmada
   }
 
 
