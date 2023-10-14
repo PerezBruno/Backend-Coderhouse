@@ -30,6 +30,7 @@ class App {
   constructor(routes, viewsRoutes) {
     this.app = express();
     this.port = PORT;
+    this.signed_cookie= SIGNED_COOKIE;
     this.productsManager = new ProductsManager()
     this.chatsManager = new ChatsManager()
     this.initializePassport = initializePassport()
@@ -59,10 +60,11 @@ class App {
     this.app.use(session(sessionConfig));
     this.app.use(passport.initialize());
     this.app.use(passport.session())
-    this.app.use(cookieParser(SIGNED_COOKIE)) // La cookie esta firmada
+    this.app.use(cookieParser(this.signed_cookie)) // La cookie esta firmada
   }
 
-
+    
+  
   //Rutas de la API
   initializeRoutes(routes) {
     routes.forEach((route) => {
