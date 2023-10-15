@@ -16,10 +16,43 @@ const ExtractJWT = jwt.ExtractJwt;// para extraer el token de las cookies
 
 
 
-// TODO:**** done()=> el "primer parametro" es el error--- si no hay error es null
-// ****************   el "segunto parametro" suele ser el usuario que estoy generando. si es "false" es que el usuario ya existe...
 const initializePassport = () =>{
 
+         //configuración de la estrategia JWT
+
+         const cookieExtractor = req => {
+            const token = req.cookies.cookieToken ? req.cookies.cookieToken : {}
+            console.log("🚀 ~ file: passport.config.js:68 ~ cookieExtractor ~ token:", token)
+            return token
+    
+        }
+        // const cookieExtractor = req => {
+        //     const token = req.cookies.jwtCookie ? req.cookies.jwtCookie : {}
+        //     console.log("🚀 ~ file: passport.config.js:107 ~ cookieExtractor ~ token:", token)
+        //     return token
+        // }
+    
+        passport.use("jwt", new JWTStrategy({
+            jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]), //El token va a venir desde cookieExtractor
+            secretOrKey:JWT_SECRET
+        }, async (jwt_payload, done) => { //jwt_payload = info del token (en este caso, datos del cliente)
+            try {
+                console.log("JWT", jwt_payload)
+                return done(null, jwt_payload)
+            } catch (error) {
+                console.log("🚀 ~ file: passport.config.js:86 ~ initializePassport ~ error:", error)
+                return done(error)
+            }
+    
+        }))
+
+
+
+
+
+        
+// TODO:**** done()=> el "primer parametro" es el error--- si no hay error es null
+// ****************   el "segunto parametro" suele ser el usuario que estoy generando. si es "false" es que el usuario ya existe...
     // estrategia Passport - local
     passport.use("register", new LocalStrategi({
         passReqToCallback:true,
@@ -61,33 +94,7 @@ const initializePassport = () =>{
     ))
 
 
-     //configuración de la estrategia JWT
 
-     const cookieExtractor = req => {
-        const token = req.cookies.jwtCookie ? req.cookies.jwtCookie : null
-        console.log("🚀 ~ file: passport.config.js:68 ~ cookieExtractor ~ token:", token)
-        return token
-
-    }
-    // const cookieExtractor = req => {
-    //     const token = req.cookies.jwtCookie ? req.cookies.jwtCookie : {}
-    //     console.log("🚀 ~ file: passport.config.js:107 ~ cookieExtractor ~ token:", token)
-    //     return token
-    // }
-
-    passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]), //El token va a venir desde cookieExtractor
-        secretOrKey:JWT_SECRET
-    }, async (jwt_payload, done) => { //jwt_payload = info del token (en este caso, datos del cliente)
-        try {
-            console.log("JWT", jwt_payload)
-            return done(null, jwt_payload)
-        } catch (error) {
-            console.log("🚀 ~ file: passport.config.js:86 ~ initializePassport ~ error:", error)
-            return done(error)
-        }
-
-    }))
 
         // estrategia Passport - github
     passport.use('github', new GithubStrategy({

@@ -12,6 +12,8 @@ import ViewsRoutes from "./routes/views.routes.js";
 
 import SessionRoutes from "./routes/session.routes.js";
 
+import cookieRoutes from "./routes/cookies.js";
+
 
 const app = new App(
   [
@@ -19,7 +21,8 @@ const app = new App(
     new usersRoutes(),
     new productsRoutes(),
     new chatRoutes(),
-    new SessionRoutes()
+    new SessionRoutes(),
+    new cookieRoutes(),
   ],
   [new ViewsRoutes()]
 );

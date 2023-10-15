@@ -24,7 +24,7 @@ class App {
   server;
   productsManager;
   chatsManager;
-  initializePassport
+  initializePassport;
 
 
   constructor(routes, viewsRoutes) {
