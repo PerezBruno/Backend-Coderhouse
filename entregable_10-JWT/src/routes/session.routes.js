@@ -152,10 +152,6 @@ class SessionRoutes {
 
           })
 
-
-          this.router.get(`${this.path}/testjwt`, passport.authenticate(`jwt`, {session:false}), (req, res)=>{
-            res.send(req.user)
-          })
           this.router.get(`${this.path}/current`, passportError(`jwt`), authorization('User'), (req, res) =>{
             res.send(req.user)
           })

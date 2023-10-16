@@ -1,6 +1,6 @@
 import { Router } from "express";
 import  ProductsManager  from "../managers/productManager.js"
-
+import { authorization, passportError } from "../utils/messagesError.js";
 
 
 class productsRoutes {
@@ -56,7 +56,7 @@ class productsRoutes {
       }
     });
 
-    this.router.post(`${this.path}`, async (req, res) => {
+    this.router.post(`${this.path}`,passportError(`jwt`), authorization('Admin'), async (req, res) => {
       const { title, description, price, thumbnail, code, stock, category } = req.body;
       try {
         const newProduct = await this.productManager.addProduct({
@@ -82,7 +82,7 @@ class productsRoutes {
 
 
 
-    this.router.put(`${this.path}/:productID`, async (req, res) => {
+    this.router.put(`${this.path}/:productID`, passportError(`jwt`), authorization('Admin'), async (req, res) => {
       const { productID } = req.params;
       const { title, description, price, thumbnail, code, stock, category } = req.body;
       try {
@@ -107,7 +107,7 @@ class productsRoutes {
     });
 
 
-    this.router.delete(`${this.path}/:productID`, async (req, res) => {
+    this.router.delete(`${this.path}/:productID`, passportError(`jwt`), authorization('Admin'), async (req, res) => {
       const { productID } = req.params;
         try {
            // const product = await ProductsModel.findByIdAndDelete(productID);
