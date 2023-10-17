@@ -30,10 +30,6 @@ class SessionRoutes {
             if(!req.user){
               return res.status(401).json({message: "incorrect data"})
             }else{
-            const token = generateToken({email});
-            console.log("🚀 ~ file: session.routes.js:33 ~ SessionRoutes ~ this.router.post ~ token:", token)
-            console.log("🚀 ~ file: session.routes.js:33 ~ SessionRoutes ~ this.router.post ~ email:", email)
-
             req.session.user = {
               role: req.user.role,
               first_name: req.user.first_name,
@@ -41,19 +37,20 @@ class SessionRoutes {
               email: req.user.email,
               age: req.user.age,
             }
-            return res
-            .cookie("cookieToken", token, {
+            const token = generateToken(req.user);
+            res.cookie("cookieToken", token, {
               maxAge: 12 * 360_000, //tiempo de expiración en milisegundos??? => sería 12 hs
               httpOnly: true,
             })
-            .status(200).json({message: "login success", payload: req.user})
-            .render("profile", {
-              role: req.session?.user?.role || user.role,
-              first_name: req.session?.user?.first_name || user.first_name,
-              last_name: req.session?.user?.last_name || user.last_name,
-              email: req.session?.user?.email || email,
-              age: req.session?.user?.age || user.age,
-            });
+            res.status(200).json({message: "login success", payload: req.user})
+            // res.render("profile", {
+            //   role: req.session?.user?.role || user.role,
+            //   first_name: req.session?.user?.first_name || user.first_name,
+            //   last_name: req.session?.user?.last_name || user.last_name,
+            //   email: req.session?.user?.email || email,
+            //   age: req.session?.user?.age || user.age,
+            // });
+
             }
           } catch (error) {
             res.status(500).json({
@@ -66,10 +63,10 @@ class SessionRoutes {
             if(req.session.user){
                 req.session.destroy((err) => {
                     if (!err) return res.redirect("/login");
-                    return res.send({ message: `logout Error`, body: err });
+                     res.send({ message: `logout Error`, body: err });
                   });
             }
-
+            res.clearCookie("cookieToken")
         })
 
         this.router.post(`${this.path}/register`, passport.authenticate('register', {failureRedirect: '/failregister'}), async (req, res) => {
