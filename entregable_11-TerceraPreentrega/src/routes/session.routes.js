@@ -6,14 +6,6 @@ import { generateToken } from "../utils/jwt.js";
 import { authorization, passportError } from "../utils/messagesError.js";
 
 
-//Verifico si el usuario es admin o no
-const auth = (req, res, next) => {
-    if (req.session.email == "admin@admin.com" && req.session.password == "1234") {
-        return next() //Continua con la siguiente ejecucion
-    }
-
-    res.send("No tenes acceso a esta ruta")
-}
 
 class SessionRoutes {
     path = "/session"
@@ -39,7 +31,7 @@ class SessionRoutes {
             }
             const token = generateToken(req.user);
             res.cookie("cookieToken", token, {
-              maxAge: 12 * 360_000, //tiempo de expiración en milisegundos??? => sería 12 hs
+              maxAge: 43200000, //tiempo de expiración en milisegundos??? => sería 12 hs
               httpOnly: true,
             })
             res.status(200).json({message: "login success", payload: req.user})
@@ -149,7 +141,7 @@ class SessionRoutes {
 
           })
 
-          this.router.get(`${this.path}/current`, passportError(`jwt`), authorization('User'), (req, res) =>{
+          this.router.get(`${this.path}/current`, passportError(`jwt`), authorization('User'), async (req, res) =>{
             res.send(req.user)
           })
 

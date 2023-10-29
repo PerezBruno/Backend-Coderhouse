@@ -36,8 +36,10 @@ const userSchema = new Schema({
 userSchema.pre("save", async function(next){
   try {
     const newCart = await cartsModel.create({})
+    console.log("🚀 ~ file: users.models.js:39 ~ userSchema.pre ~ newCart:", newCart)
     this.cart = newCart._id
   } catch (error) {
+    console.log("🚀 ~ file: users.models.js:41 ~ userSchema.pre ~ error:", error)
     next(error)
   }
 })

@@ -24,6 +24,7 @@ class UserManager {
     async addUser({ first_name, last_name, age, email, password, role }){
         try {
             const newUser = await UsersModel.create({first_name, last_name, age, email, password, role});
+            console.log("🚀 ~ file: usersManager.js:27 ~ UserManager ~ addUser ~ newUser:", newUser)
             return newUser
         } catch (error) {
             console.log("🚀 ~ file: usersManager.js:28 ~ UserManager ~ addUser ~ error:", error)

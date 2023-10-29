@@ -2,79 +2,29 @@ import { Router } from "express";
 import { cartsModel } from "../models/carts.models.js";
 import { ProductsModel } from "../models/products.models.js";
 import CartsManager from "../managers/cartsManager.js";
+import { authorization, passportError } from "../utils/messagesError.js";
+import CartController from "../controllers/carts.controller.js";
 
 class cartsRoutes {
   path = "/carts";
   router = Router();
-  cartsManager;
+  cartController;
 
   constructor() {
+    this.cartController = new CartController()
     this.initCartsRoutes();
-    this.cartsManager = new CartsManager()
   }
   
   initCartsRoutes() {
-    //crea un carrito vacío
-    this.router.post(`${this.path}`, async (req, res) => {
-      try {
-        const cart = await cartsModel.create({});
-        res.status(200).send({
-          message: `cart created succesfully`,
-          cart,
-        });
-      } catch (error) {
-        console.log("🚀 ~ file: carts.routes.js:23 ~ cartsRoutes ~ this.router.post ~ error:", error)
-        res
-          .status(400)
-          .send({ message: "error creating product",
-           error, });
-      }
-    });
 
     //Obtiene los productos del carrito indicado con el cartID
-    this.router.get(`${this.path}/:cartId`, async (req, res) => {
-      const { cartId } = req.params;
-      try {
-        const products = await this.cartsManager.getProductInCartById(cartId);
-        if (products)
-          res.status(200).send({
-            message: `Products in the cart ${cartId}`,
-            products,
-          });
-        else
-          res.status(404).send({
-            message: `product with id ${cartId} not found`,
-          });
-      } catch (error) {
-        console.log("🚀 ~ file: carts.routes.js:48 ~ cartsRoutes ~ this.router.get ~ error:", error)
-        res.status(400).send({
-          message: "error getting carts",
-          error,
-        });
-      }
-    });
+    this.router.get(`${this.path}/:cartId`, passportError(`jwt`), authorization('User'), this.cartController.getProductInCartById);
 
     //añade un producto asignado a un carrito designado
-    this.router.post(`${this.path}/:cartId/products/:productId`, async (req, res) => {
-        const { cartId, productId } = req.params
-        const { quantity } = req.body
-        try {
-          const addProduct =  await this.cartsManager.addProductInCartById(cartId, productId, quantity);
-          res.status(200).send({
-                            message: 'updating cart',
-                             product: addProduct
-                        })
-        } catch (error) {
-          console.log("🚀 ~ file: carts.routes.js:69 ~ cartsRoutes ~ this.router.post ~ error:", error)
-          res.status(400).send({
-                     message: 'error updating cart',
-                     error })
-        }
-
-    })
+    this.router.post(`${this.path}/:cartId/products/:productId`, passportError(`jwt`), authorization('User'), this.cartController.addProductInCartById)
 
 //DELETE "/:cid" ==> elimina todos los productos del carrito seleccionado
-    this.router.delete (`${this.path}/:cartId`, async (req, res)=>{
+    this.router.delete (`${this.path}/:cartId`, passportError(`jwt`), authorization('User'), async (req, res)=>{
       const { cartId } = req.params
       try {
         const deleteProducts = await this.cartsManager.delProductsInCartById(cartId);
@@ -91,7 +41,7 @@ class cartsRoutes {
     })
 
     // DELETE "/:cid/products/:pid"  ==> eliminará del carrito el producto seleccionado
-    this.router.delete (`${this.path}/:cartId/products/:productId`, async (req, res)=>{
+    this.router.delete (`${this.path}/:cartId/products/:productId`, passportError(`jwt`), authorization('User'), async (req, res)=>{
       const { cartId, productId } = req.params
       try {
         const deleteProduct = await this.cartsManager.deletProdByIdInCartById(cartId, productId);
@@ -110,7 +60,7 @@ class cartsRoutes {
 
 
 // PUT "api/carts/:cid/products/:pid" ==> actualiza sólo la cantidad del producto pasado
-    this.router.put(`${this.path}/:cartId/products/:productId`, async (req, res)=>{
+    this.router.put(`${this.path}/:cartId/products/:productId`, passportError(`jwt`), authorization('User'), async (req, res)=>{
       const { cartId, productId } = req.params
       const { quantity } = req.body
       try {
@@ -127,7 +77,7 @@ class cartsRoutes {
 
     // PUT "/:cid" ==> actualiza el carrito mediante un array
 
-    this.router.put(`${this.path}/:cartId`, async (req, res)=>{
+    this.router.put(`${this.path}/:cartId`, passportError(`jwt`), authorization('User'), async (req, res)=>{
       const {cartId} = req.params
       let arrayProducts = req.body
       try {

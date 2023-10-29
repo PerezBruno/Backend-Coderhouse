@@ -18,7 +18,7 @@ export const authToken = (req, res, next)=>{
 
     if(!authHeader){
         return res.status(401).json({
-            message: "unauthenticated user"
+            message: "unauthenticated user"// el usuario no tiene token => no esta autenticado
         })
     }
     const token = authHeader.split(' ')[1]//descarto el "Bearer"
