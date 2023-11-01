@@ -11,91 +11,103 @@ class cartsRoutes {
   cartController;
 
   constructor() {
-    this.cartController = new CartController()
+    this.cartController = new CartController();
     this.initCartsRoutes();
   }
-  
+
   initCartsRoutes() {
-
     //Obtiene los productos del carrito indicado con el cartID
-    this.router.get(`${this.path}/:cartId`, passportError(`jwt`), authorization('User'), this.cartController.getProductInCartById);
+    this.router.get(
+      `${this.path}/:cartId`,
+      passportError(`jwt`),
+      authorization("User"),
+      this.cartController.getProductInCartById
+    );
 
-    //añade un producto asignado a un carrito designado
-    this.router.post(`${this.path}/:cartId/products/:productId`, passportError(`jwt`), authorization('User'), this.cartController.addProductInCartById)
+    //añade o actualiza un producto asignado a un carrito designado
+    this.router.post(
+      `${this.path}/:cartId/products/:productId`,
+      passportError(`jwt`),
+      authorization("User"),
+      this.cartController.addProductInCartById
+    );
 
-//DELETE "/:cid" ==> elimina todos los productos del carrito seleccionado
-    this.router.delete (`${this.path}/:cartId`, passportError(`jwt`), authorization('User'), async (req, res)=>{
-      const { cartId } = req.params
-      try {
-        const deleteProducts = await this.cartsManager.delProductsInCartById(cartId);
-        res.status(200).send({
-          message: `the products in the cart ${cartId} were successfully deleted`,
-           product: deleteProducts
-      })
-      } catch (error) {
-        console.log("🚀 ~ file: carts.routes.js:86 ~ cartsRoutes ~ this.router.delete ~ error:", error)
-        res.status(400).send({
-          message: 'error deleting products',
-          error })
-      }
-    })
+    //DELETE "/:cid" ==> elimina todos los productos del carrito seleccionado
+    this.router.delete(
+      `${this.path}/:cartId`,
+      passportError(`jwt`),
+      authorization("User"),
+      this.cartController.delProductsInCartById
+    );
 
     // DELETE "/:cid/products/:pid"  ==> eliminará del carrito el producto seleccionado
-    this.router.delete (`${this.path}/:cartId/products/:productId`, passportError(`jwt`), authorization('User'), async (req, res)=>{
-      const { cartId, productId } = req.params
-      try {
-        const deleteProduct = await this.cartsManager.deletProdByIdInCartById(cartId, productId);
-        res.status(200).send({
-          message: `the product ${productId} in the cart ${cartId} were successfully deleted`,
-           product: deleteProduct
-      })
-      } catch (error) {
-        console.log("🚀 ~ file: carts.routes.js:103 ~ cartsRoutes ~ this.router.delete ~ error:", error)
-        res.status(400).send({
-          message: 'error deleting product',
-          error })
+    this.router.delete(
+      `${this.path}/:cartId/products/:productId`,
+      passportError(`jwt`),
+      authorization("User"),
+      this.cartController.delProductsByIdInCartById
+    );
+
+    // PUT "api/carts/:cid/products/:pid" ==> actualiza sólo la cantidad del producto pasado
+    this.router.put(
+      `${this.path}/:cartId/products/:productId`,
+      passportError(`jwt`),
+      authorization("User"),
+      async (req, res) => {
+        const { cartId, productId } = req.params;
+        const { quantity } = req.body;
+        try {
+          const result = await this.cartsManager.editQuantity(
+            cartId,
+            productId,
+            quantity
+          );
+          res.status(200).send({
+            message: `the quantity was successfully updated`,
+            product: result,
+          });
+        } catch (error) {
+          console.log(
+            "🚀 ~ file: carts.routes.js:133 ~ cartsRoutes ~ this.router.put ~ error:",
+            error
+          );
+        }
       }
-    })
-
-
-
-// PUT "api/carts/:cid/products/:pid" ==> actualiza sólo la cantidad del producto pasado
-    this.router.put(`${this.path}/:cartId/products/:productId`, passportError(`jwt`), authorization('User'), async (req, res)=>{
-      const { cartId, productId } = req.params
-      const { quantity } = req.body
-      try {
-        const result = await this.cartsManager.editQuantity(cartId, productId, quantity)
-        res.status(200).send({
-          message: `the quantity was successfully updated`,
-           product: result
-      })
-      } catch (error) {
-      console.log("🚀 ~ file: carts.routes.js:133 ~ cartsRoutes ~ this.router.put ~ error:", error)
-    
-      }
-})
+    );
 
     // PUT "/:cid" ==> actualiza el carrito mediante un array
 
-    this.router.put(`${this.path}/:cartId`, passportError(`jwt`), authorization('User'), async (req, res)=>{
-      const {cartId} = req.params
-      let arrayProducts = req.body
-      try {
-        let newListProducts = await this.cartsManager.insertArray(cartId, arrayProducts)
-        res.status(200).send({
-          message: `the cart was successfully updated`,
-           products: newListProducts
-      })
-       } catch (error) {
-        console.log("🚀 ~ file: carts.routes.js:140 ~ cartsRoutes ~ this.router.put ~ error:", error)
-        
+    this.router.put(
+      `${this.path}/:cartId`,
+      passportError(`jwt`),
+      authorization("User"),
+      async (req, res) => {
+        const { cartId } = req.params;
+        let arrayProducts = req.body;
+        try {
+          let newListProducts = await this.cartsManager.insertArray(
+            cartId,
+            arrayProducts
+          );
+          res.status(200).send({
+            message: `the cart was successfully updated`,
+            products: newListProducts,
+          });
+        } catch (error) {
+          console.log(
+            "🚀 ~ file: carts.routes.js:140 ~ cartsRoutes ~ this.router.put ~ error:",
+            error
+          );
         }
-   })
+      }
+    );
+
+    this.router.put(
+      `${this.path}/:cartId/purchase`,
+      passportError(`jwt`),
+      authorization("User"), this.cartController.buy)
 
   }
 }
-
-
-
 
 export default cartsRoutes;

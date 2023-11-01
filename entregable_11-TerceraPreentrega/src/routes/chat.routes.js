@@ -1,50 +1,20 @@
 import { Router } from "express";
-import { chatsModel } from "../models/chats.models.js";
+import ChatController from "../controllers/chats.controller.js";
+import { authorization, passportError } from "../utils/messagesError.js";
 
 class chatRoutes {
   path = "/chat";
   router = Router();
+  chatController;
 
   constructor() {
+    this.chatController = new ChatController()
     this.initChatRoutes();
   }
   initChatRoutes() {
-    this.router.get(`${this.path}`, async (req, res) => {
-      try {
-        const messages = await chatsModel.find();
-        res.status(200).send({
-          message: "Get all messages successfully",
-          messages,
-        });
-      } catch (error) {
-        console.log(
-          "🚀 ~ file: chat.routes.js:21 ~ chatRoutes ~ this.router.get ~ error:",
-          error
-        );
-        res.status(400).send({
-          message: "error getting messages",
-          error: error,
-        });
-      }
-    });
+    this.router.get(`${this.path}`, passportError(`jwt`), authorization('User'), this.chatController.getAllMessages );
 
-    this.router.post(`${this.path}`, async (req, res)=>{
-        const {user, message} = req.body
-        try {
-            const newMessage = await chatsModel.create({user, message});
-
-    return res.status(200).send({
-      messageStatus: `message added succesfully`,
-      message: newMessage,
-    });
-        } catch (error) {
-            console.log("🚀 ~ file: chat.routes.js:41 ~ chatRoutes ~ this.router.post ~ error:", error)
-            res.status(400).send({
-                message: "error loading messages",
-                error: error,
-              });
-        }
-    })
+    this.router.post(`${this.path}`, passportError(`jwt`), authorization('User'), this.chatController.addMessage)
 
   }
 }
