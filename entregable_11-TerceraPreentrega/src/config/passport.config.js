@@ -3,11 +3,12 @@ import GithubStrategy from "passport-github2"
 import jwt from "passport-jwt"
 import passport from 'passport'
 import {createHashValue, validatePassword} from "../utils/bcrypt.js"
-import UserManager from "../managers/usersManager.js"
+//import UserManager from "../managers/usersManager.js"
 import { CALLBACK_URL, CLIENT_ID, CLIENT_SECRET, JWT_SECRET } from './config.js'
+import { UsersModel } from '../models/users.models.js'
 
 const LocalStrategi = local.Strategy;
-const userManager = new UserManager();
+//const userManager = new UserManager();
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;// para extraer el token de las cookies
@@ -52,15 +53,15 @@ const initializePassport = () =>{
     }, async(req, username, password, done)=>{
         const {first_name, last_name, email, age} = req.body;
         try {
-            const user = await userManager.findUserByEmail({email: username})
+            const user = await UsersModel.findOne({email: username})
             if(user){
                 return done(null, false);
             }
             const passwordHash = createHashValue(password);
-            const newUser = await userManager.addUser({first_name, last_name, age, email, password:passwordHash})
+            const newUser = await UsersModel.create({first_name, last_name, age, email, password:passwordHash})
             return done(null, newUser)
         } catch (error) {
-            console.log("🚀 ~ file: passport.js:27 ~ initializePassport ~ error:", error)
+            console.log("🚀 ~ file: passport.config.js:64 ~ initializePassport ~ error:", error)
             return done(error)
         }
     }
@@ -70,7 +71,7 @@ const initializePassport = () =>{
     passport.use('login', new LocalStrategi(
         {usernameField: 'email'}, async(username, password, done) =>{
             try {
-                const user = await userManager.findUserByEmail({email: username})
+                const user = await UsersModel.findOne({email: username})
                 if(!user){
                     return done(null, false)
                 }
@@ -96,11 +97,11 @@ const initializePassport = () =>{
     }, async (accessToken, refreshToken, profile, done) =>{
         try {
 
-            const user = await userManager.findUserByEmail({email: profile._json?.email})
+            const user = await UsersModel.findOne({email: profile._json?.email})
             if(user){
                 done(null, user)
             }else {
-                const newUser = await userManager.addUser({
+                const newUser = await UsersModel.create({
               first_name: profile._json?.name,
               last_name: ' ',
               email: profile._json?.email,
@@ -122,7 +123,7 @@ const initializePassport = () =>{
 
     //Eliminar la session del usuario
     passport.deserializeUser( async (id, done) =>{
-        const user = await userManager.getUserById(id)
+        const user = await UsersModel.findById(id)
         done(null, user)
     })
 
