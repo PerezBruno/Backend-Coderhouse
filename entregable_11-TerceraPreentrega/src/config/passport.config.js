@@ -50,10 +50,16 @@ const initializePassport = () =>{
     passport.use("register", new LocalStrategi({
         passReqToCallback:true,
         usernameField: 'email'
-    }, async(req, username, password, done)=>{
+    }, async(req, username, password, done) => {
+        console.log("🚀 ~ file: passport.config.js:54 ~ initializePassport ~ username:", username)
         const {first_name, last_name, email, age} = req.body;
+        console.log("🚀 ~ file: passport.config.js:55 ~ initializePassport ~ age:", age)
+        console.log("🚀 ~ file: passport.config.js:55 ~ initializePassport ~ email:", email)
+        console.log("🚀 ~ file: passport.config.js:55 ~ initializePassport ~ last_name:", last_name)
+        console.log("🚀 ~ file: passport.config.js:55 ~ initializePassport ~ first_name:", first_name)
         try {
-            const user = await UsersModel.findOne({email: username})
+            const user = await UsersModel.findOne({email})
+            console.log("🚀 ~ file: passport.config.js:57 ~ initializePassport ~ user:", user)
             if(user){
                 return done(null, false);
             }
