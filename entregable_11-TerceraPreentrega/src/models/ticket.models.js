@@ -15,8 +15,13 @@ const ticketSchema = new Schema({
         required: true,
       },
     purchaser: { //toma el email del usuario que realiza la compra
-
+        type: Schema.Types.String,
+        ref: "users"
       },
+});
+
+ticketSchema.pre("findOne", function () {
+  this.populate("users.email");
 });
 
 export const ticketModel = model("ticket", ticketSchema);

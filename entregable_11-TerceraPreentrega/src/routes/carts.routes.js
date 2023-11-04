@@ -4,13 +4,16 @@ import { ProductsModel } from "../models/products.models.js";
 import CartsManager from "../managers/cartsManager.js";
 import { authorization, passportError } from "../utils/messagesError.js";
 import CartController from "../controllers/carts.controller.js";
+import TicketController from "../controllers/ticket.controllers.js"
 
 class cartsRoutes {
   path = "/carts";
   router = Router();
   cartController;
+  ticketController;
 
   constructor() {
+    this.ticketController = new TicketController();
     this.cartController = new CartController();
     this.initCartsRoutes();
   }
@@ -49,64 +52,42 @@ class cartsRoutes {
     );
 
     // PUT "api/carts/:cid/products/:pid" ==> actualiza sólo la cantidad del producto pasado
-    this.router.put(
-      `${this.path}/:cartId/products/:productId`,
-      passportError(`jwt`),
-      authorization("User"),
-      async (req, res) => {
-        const { cartId, productId } = req.params;
-        const { quantity } = req.body;
-        try {
-          const result = await this.cartsManager.editQuantity(
-            cartId,
-            productId,
-            quantity
-          );
-          res.status(200).send({
-            message: `the quantity was successfully updated`,
-            product: result,
-          });
-        } catch (error) {
-          console.log(
-            "🚀 ~ file: carts.routes.js:133 ~ cartsRoutes ~ this.router.put ~ error:",
-            error
-          );
-        }
-      }
-    );
+    // this.router.put(
+    //   `${this.path}/:cartId/products/:productId`,
+    //   passportError(`jwt`),
+    //   authorization("User"), this.cartController.putEditQuantity);
 
     // PUT "/:cid" ==> actualiza el carrito mediante un array
 
-    this.router.put(
-      `${this.path}/:cartId`,
-      passportError(`jwt`),
-      authorization("User"),
-      async (req, res) => {
-        const { cartId } = req.params;
-        let arrayProducts = req.body;
-        try {
-          let newListProducts = await this.cartsManager.insertArray(
-            cartId,
-            arrayProducts
-          );
-          res.status(200).send({
-            message: `the cart was successfully updated`,
-            products: newListProducts,
-          });
-        } catch (error) {
-          console.log(
-            "🚀 ~ file: carts.routes.js:140 ~ cartsRoutes ~ this.router.put ~ error:",
-            error
-          );
-        }
-      }
-    );
+    // this.router.put(
+    //   `${this.path}/:cartId`,
+    //   passportError(`jwt`),
+    //   authorization("User"),
+    //   async (req, res) => {
+    //     const { cartId } = req.params;
+    //     let arrayProducts = req.body;
+    //     try {
+    //       let newListProducts = await this.cartsManager.insertArray(
+    //         cartId,
+    //         arrayProducts
+    //       );
+    //       res.status(200).send({
+    //         message: `the cart was successfully updated`,
+    //         products: newListProducts,
+    //       });
+    //     } catch (error) {
+    //       console.log(
+    //         "🚀 ~ file: carts.routes.js:140 ~ cartsRoutes ~ this.router.put ~ error:",
+    //         error
+    //       );
+    //     }
+    //   }
+    // );
 
-    this.router.put(
+    this.router.post(
       `${this.path}/:cartId/purchase`,
       passportError(`jwt`),
-      authorization("User"), this.cartController.buy)
-
+      authorization("User"), this.ticketController.postBuy)
   }
 }
 

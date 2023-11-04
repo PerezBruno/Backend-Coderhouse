@@ -3,13 +3,10 @@ import GithubStrategy from "passport-github2"
 import jwt from "passport-jwt"
 import passport from 'passport'
 import {createHashValue, validatePassword} from "../utils/bcrypt.js"
-//import UserManager from "../managers/usersManager.js"
 import { CALLBACK_URL, CLIENT_ID, CLIENT_SECRET, JWT_SECRET } from './config.js'
 import { UsersModel } from '../models/users.models.js'
 
-const LocalStrategi = local.Strategy;
-//const userManager = new UserManager();
-
+const LocalStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;// para extraer el token de las cookies
 
@@ -47,18 +44,13 @@ const initializePassport = () =>{
 // TODO:**** done()=> el "primer parametro" es el error--- si no hay error es null
 // ****************   el "segunto parametro" suele ser el usuario que estoy generando. si es "false" es que el usuario ya existe...
     // estrategia Passport - local
-    passport.use("register", new LocalStrategi({
+    passport.use("register", new LocalStrategy({
         passReqToCallback:true,
         usernameField: 'email'
     }, async(req, username, password, done) => {
-        console.log("🚀 ~ file: passport.config.js:54 ~ initializePassport ~ username:", username)
         const {first_name, last_name, email, age} = req.body;
-        console.log("🚀 ~ file: passport.config.js:55 ~ initializePassport ~ age:", age)
-        console.log("🚀 ~ file: passport.config.js:55 ~ initializePassport ~ email:", email)
-        console.log("🚀 ~ file: passport.config.js:55 ~ initializePassport ~ last_name:", last_name)
-        console.log("🚀 ~ file: passport.config.js:55 ~ initializePassport ~ first_name:", first_name)
         try {
-            const user = await UsersModel.findOne({email})
+            const user = await UsersModel.findOne({email: username})
             console.log("🚀 ~ file: passport.config.js:57 ~ initializePassport ~ user:", user)
             if(user){
                 return done(null, false);
@@ -74,7 +66,7 @@ const initializePassport = () =>{
     ))
 
 
-    passport.use('login', new LocalStrategi(
+    passport.use('login', new LocalStrategy(
         {usernameField: 'email'}, async(username, password, done) =>{
             try {
                 const user = await UsersModel.findOne({email: username})

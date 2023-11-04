@@ -22,14 +22,14 @@ export default class SessionsController {
           maxAge: 43200000, //tiempo de expiración en milisegundos??? => sería 12 hs
           httpOnly: true,
         });
-        res.status(200).json({ message: "login success", payload: req.user });
-        // res.render("profile", {
-        //   role: req.session?.user?.role || user.role,
-        //   first_name: req.session?.user?.first_name || user.first_name,
-        //   last_name: req.session?.user?.last_name || user.last_name,
-        //   email: req.session?.user?.email || email,
-        //   age: req.session?.user?.age || user.age,
-        // });
+        //res.status(200).json({ message: "login success", payload: req.user });
+        res.status(200).render("profile", {
+          role: req.session?.user?.role || user.role,
+          first_name: req.session?.user?.first_name || user.first_name,
+          last_name: req.session?.user?.last_name || user.last_name,
+          email: req.session?.user?.email || email,
+          age: req.session?.user?.age || user.age,
+        });
       }
     } catch (error) {
       res.status(500).json({

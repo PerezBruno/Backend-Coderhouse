@@ -8,6 +8,10 @@ export default class CartController {
     const { cartId } = req.params;
     try {
       const products = await cartsModel.findById(cartId);
+      console.log(
+        "🚀 ~ file: carts.controller.js:11 ~ CartController ~ getProductInCartById ~ products:",
+        products
+      );
       if (products)
         res.status(200).send({
           message: `Products in the cart ${cartId}`,
@@ -111,11 +115,9 @@ export default class CartController {
             products: newCart,
           });
         } else {
-          res
-            .status(404)
-            .send({
-              message: `product with id ${productId} not found in cart`,
-            });
+          res.status(404).send({
+            message: `product with id ${productId} not found in cart`,
+          });
         }
       }
     } catch (error) {
@@ -130,45 +132,49 @@ export default class CartController {
     }
   }
 
-  // async editQuantity(req, res) {
+  // async putEditQuantity(req, res) {
   //   const { cartId, productId } = req.params;
   //   const { quantity } = req.body;
   //   try {
+  //     //verifico la existencia del carrito
   //     const cart = await cartsModel.findById(cartId);
+  //     console.log("🚀 ~ file: carts.controller.js:140 ~ CartController ~ putEditQuantity ~ cart:", cart)
   //     if (cart) {
-  //       for (let prod of products) {
-  //         // Verifica si el producto ya existe en el carrito
-  //         const index = cart.products.findIndex(cartProduct => cartProduct.id_prod._id.toString() === prod.id_prod);
-  //         if (index !== -1) {
-  //             // Si ya existe, actualizamos la cantidad
-  //             cart.products[index].quantity = prod.quantity;
+  //       //verifico la existencia del producto
+  //       const prod = await ProductsModel.findById(productId);
+  //       console.log("🚀 ~ file: carts.controller.js:143 ~ CartController ~ putEditQuantity ~ prod:", prod)
+  //       if (prod) {
+  //         const index = cart.products.findIndex(
+  //           (item) => item.product == productId
+  //         );
+  //         console.log("🚀 ~ file: carts.controller.js:148 ~ CartController ~ putEditQuantity ~ index:", index)
+  //         if (index != -1) {
+  //           cart.products[index].quantity = quantity;
   //         } else {
-  //             // Si no existe, primero validamos que el producto exista en la base de datos
-  //             const exists = await productModel.findById(prod.id_prod);
-  //             if (!exists) {
-  //                 throw new Error(`Product with ID ${prod.id_prod} not found`);
-  //             }
-  //             // Añade el producto al carrito
-  //             cart.products.push(prod);
+  //           return { message: "index not found" };
   //         }
-  //     }
-  //     await cart.save();
-  //     res.status(200).send
+  //         const updateCart = await cartsModel.findByIdAndUpdate(cartId, cart);
+  //         res.status(200).send({
+  //           message: `the quantity was successfully updated`,
+  //           product: updateCart,
+  //         });
+  //         //return { message: "the quantity was updated successfully" };
+  //       } else {
+  //          res.status(404).json({ message: "product not found" });
+  //       }
   //     } else {
-  //       return { message: "cart not found" };
+  //       res.status(404).json ({ message: "cart not found" });
   //     }
   //   } catch (error) {
-  //     console.log(
-  //       "🚀 ~ file: CartsManager.js:101 ~ CartsManager ~ editQuantity ~ error:",
-  //       error
-  //     );
+  //   console.log("🚀 ~ file: carts.controller.js:164 ~ CartController ~ editQuantity ~ error:", error)
+
   //   }
   // }
 
   // async insertArray (req,res){
   //   const {cartId} = req.params
   //   let arrayProducts = req.body
-  //   try {            
+  //   try {
   //     const cartProducts = await cartsModel.findById(cartId)//busco el carrito
   //     if(cartProducts){
   //         for (let prod of arrayProducts) {//verifico si existen productos repetidos
@@ -190,18 +196,8 @@ export default class CartController {
   //     return await cartProducts.save()
   // } catch (error) {
   //     console.log("🚀 ~ file: cartsManager.js:110 ~ CartsManager ~ insertArray ~ error:", error)
-      
+
   // }
   // }
 
-
-  async buy(req, res){
-    const { cartId } = req.params;
-    try {
-      const cart = await cartsModel.findById(cartId);
-      if (cart) {}
-    } catch (error) {
-      
-    }
-  }
 }

@@ -9,6 +9,7 @@ const userSchema = new Schema({
   last_name: {
     type: String,
     required: true,
+    index: true
   },
   age: {
     type: Number,
