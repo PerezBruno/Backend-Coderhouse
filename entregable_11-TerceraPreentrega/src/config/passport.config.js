@@ -51,7 +51,6 @@ const initializePassport = () =>{
         const {first_name, last_name, email, age} = req.body;
         try {
             const user = await UsersModel.findOne({email: username})
-            console.log("🚀 ~ file: passport.config.js:57 ~ initializePassport ~ user:", user)
             if(user){
                 return done(null, false);
             }
