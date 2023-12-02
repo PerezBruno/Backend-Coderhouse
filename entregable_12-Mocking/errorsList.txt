@@ -3,12 +3,13 @@ Listado de posibles problemas:
 **REGISTRO**
 Error: Faltan campos obligatorios. 
 Error: Tipo de dato erroneo.
-Error: Email existente. 
+Error: Email ya registrado. 
 
 
 **INICIO SESIÓN**
 Error: Email inválido.
 Error: Contraseña inválida.
+Error: Formato de email incorrecto.
 
 
 **CREACIÓN DE PRODUCTOS**
