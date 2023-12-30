@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authorization, passportError } from "../utils/messagesError.js";
 import CartController from "../controllers/carts.controller.js";
 import TicketController from "../controllers/ticket.controllers.js"
+import transporter from "../config/mail.config.js";
 
 class cartsRoutes {
   path = "/carts";

@@ -12,10 +12,13 @@ import ViewsRoutes from "./routes/views.routes.js";
 
 import SessionRoutes from "./routes/session.routes.js";
 
-import mocksRoutes from "./routes/mockRoutes.js"
+import mocksRoutes from "./routes/mockRoutes.js";
+
+import logginRoutes from "./routes/loggin.routes.js";
 
 const app = new App(
   [
+    new logginRoutes(),
     new cartsRoutes(),
     new usersRoutes(),
     new productsRoutes(),

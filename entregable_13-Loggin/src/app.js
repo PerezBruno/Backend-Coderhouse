@@ -15,6 +15,8 @@ import  ChatsManager  from "./managers/chatsManager.js"
 import cors from "cors";
 import corsConfig from "./config/cors.config.js";
 import { PORT, SIGNED_COOKIE } from "./config/config.js";
+import { addLogger } from "./config/logger.config.js";
+
 
 
 
@@ -61,6 +63,7 @@ class App {
     this.app.use(passport.initialize());
     this.app.use(passport.session())
     this.app.use(cookieParser(this.signed_cookie)) // La cookie esta firmada
+    this.app.use(addLogger);
   }
 
     
@@ -164,9 +167,14 @@ class App {
     this.app.set("views", path.resolve(__dirname, "./views"));
   }
 
-
   
 }
 
 
 export default App;
+
+
+
+
+// estoy viendo vide de after class del día 6/12 - dura 1:33:28
+// es sobre LOGGIN
