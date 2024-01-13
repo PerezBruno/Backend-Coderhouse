@@ -47,7 +47,6 @@ export default class CartController {
           const updateCart = await cartsModel.findByIdAndUpdate(cartId, cart);
           res.status(200).send({
             message: "the cart was uploaded successfully",
-            updateCart,
           });
         } else {
           res.status(404).send({

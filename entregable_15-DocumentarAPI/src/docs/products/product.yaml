@@ -28,12 +28,14 @@ paths:
       tags:
         - Product
       parameters:
-      requestBody:
+      - name: body
+        in: body
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/requestBodies/Product'
+        schema:
+          $type: object
+          properties:
+            quantity:
+              type: number
       responses:
         '200':
           description: Successfully updated product
