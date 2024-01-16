@@ -5,11 +5,11 @@ paths:
       tags:
         - Sessions
       requestBody:
-        required: true
+        required: True
         content:
           aplication/json:
             schema:
-              $ref: '#/components/schemas/requestBodies/User'
+              $ref: '#/components/requestBodies/User'
       # parameters:
         # - name: body
         #   in: body
@@ -34,7 +34,7 @@ paths:
             aplication/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/Users'
         '400':
           description: Bad Request
           content:
@@ -46,21 +46,26 @@ paths:
 
 components:
   schemas:
-    requestBodies:
-      User:
-        type: object
-        description: User data to register
-        properties:
-          first_name: 
-            type: string
-          last_name:
-            type: string
-          email:
-            type: string
-          age:
-            type: number
-          password:
-            type: string
+
+    Users:
+      type: object
+      properties:
+        first_name: 
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        age:
+          type: number
+        password:
+          type: string
+      example:
+        first_name: Hello
+        last_name: WWord
+        email: hello@word.com
+        age: 50
+        password: JDPinpdiobnsdnbpxdib662498
 
     Error:
       type: object
@@ -70,3 +75,26 @@ components:
           description: Error message
       example:
         message: Error message
+
+
+  requestBodies:
+    User:
+      type: object
+      description: User data to register
+      properties:
+        first_name: 
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        age:
+          type: number
+        password:
+          type: string
+      example:
+        first_name: Hello
+        last_name: WWord
+        email: hello@word.com
+        age: 50
+        password: JDPinpdiobnsdnbpxdib662498

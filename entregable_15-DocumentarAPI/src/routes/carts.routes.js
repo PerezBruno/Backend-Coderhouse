@@ -26,6 +26,8 @@ class cartsRoutes {
     //añade o actualiza un producto asignado a un carrito designado
     this.router.post(
       `${this.path}/:cartId/products/:productId`,
+      passportError(`jwt`),
+      authorization(["User"]),
       this.cartController.addProductInCartById
     );
 
