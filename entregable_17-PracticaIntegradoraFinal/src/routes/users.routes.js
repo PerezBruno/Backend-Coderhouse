@@ -15,8 +15,7 @@ class usersRoutes {
   initUsersRoutes() {
     this.router.get(
       `${this.path}`,
-      passportError(`jwt`),
-      authorization("Admin"),
+
       this.userController.getUsers
     );
 
@@ -36,8 +35,6 @@ class usersRoutes {
 
     this.router.delete(
       `${this.path}/:userId`,
-      passportError(`jwt`),
-      authorization(["Admin", "User"]),
       this.userController.deleteUserById
     );
 
