@@ -17,7 +17,7 @@ class productsRoutes {
 
     this.router.get(`${this.path}/:productID`, this.prodController.getProductById);
 
-    this.router.post(`${this.path}`, this.prodController.addProduct );
+    this.router.post(`${this.path}`, passportError(`jwt`), authorization('Admin'), this.prodController.addProduct);
 
     this.router.put(`${this.path}/:productID`, this.prodController.updateProductById);
 

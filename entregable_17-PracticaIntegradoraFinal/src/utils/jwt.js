@@ -15,13 +15,14 @@ export const generateToken = user =>{
 export const authToken = (req, res, next)=>{
     //consulto al header para obtener el TOKEN
     const authHeader = req.headers.Authorization
+    let token
 
     if(!authHeader){
         return res.status(401).json({
             message: "unauthenticated user"// el usuario no tiene token => no esta autenticado
         })
     }
-    const token = authHeader.split(' ')[1]//descarto el "Bearer"
+        token = authHeader.split(' ')[1]//descarto el "Bearer"
     jwt.sign(token, `claveCoderhouse`, (error, credential)=>{
         if(error){
             return res.satatus(403).json({message: "unauthorized user, invalid TOKEN"})

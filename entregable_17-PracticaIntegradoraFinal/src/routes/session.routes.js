@@ -18,7 +18,7 @@ class SessionRoutes {
   initSessionRoutes() {
     this.router.post(
       `${this.path}/login`,
-      passport.authenticate("login", { failureRedirect: "/faillogin" }),
+      passport.authenticate("login"),
       this.sessionsController.postLogin
     );
 
@@ -26,7 +26,7 @@ class SessionRoutes {
 
     this.router.post(
       `${this.path}/register`,
-      passport.authenticate("register", { failureRedirect: "/failregister" }),
+      passport.authenticate("register"),
       this.sessionsController.postRegister
     );
 

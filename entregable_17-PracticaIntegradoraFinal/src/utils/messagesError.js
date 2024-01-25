@@ -19,9 +19,8 @@ export const passportError = (strategy) => {
 
 
 //Recibo un rol y establezco la capacidad del usuario
-export const authorization = (role) =>{
+export const authorization = ([role]) =>{
     return async (req, res, next) =>{
-        
         if(!req.user){
             return res.status(401).json({
                 message: "unauthorized user"

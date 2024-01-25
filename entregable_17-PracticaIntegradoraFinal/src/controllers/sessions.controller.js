@@ -10,26 +10,28 @@ export default class SessionsController {
       if (!req.user) {
         return res.status(401).json({ message: "incorrect data" });
       } else {
-        req.session.user = {
-          role: req.user.role,
-          first_name: req.user.first_name,
-          last_name: req.user.last_name,
-          email: req.user.email,
-          age: req.user.age,
-        };
+        // req.session.user = {
+        //   role: req.user.role,
+        //   first_name: req.user.first_name,
+        //   last_name: req.user.last_name,
+        //   email: req.user.email,
+        //   age: req.user.age,
+        // };
         const token = generateToken(req.user);
         res.cookie("cookieToken", token, {
           maxAge: 43200000, //tiempo de expiración en milisegundos??? => sería 12 hs
           httpOnly: true,
         });
+        res.status(200).send({token: token });
+
         //res.status(200).json({ message: "login success", payload: req.user });
-        res.status(200).render("profile", {
-          role: req.session?.user?.role || user.role,
-          first_name: req.session?.user?.first_name || user.first_name,
-          last_name: req.session?.user?.last_name || user.last_name,
-          email: req.session?.user?.email || email,
-          age: req.session?.user?.age || user.age,
-        });
+        // res.status(200).render("profile", {
+        //   role: req.session?.user?.role || user.role,
+        //   first_name: req.session?.user?.first_name || user.first_name,
+        //   last_name: req.session?.user?.last_name || user.last_name,
+        //   email: req.session?.user?.email || email,
+        //   age: req.session?.user?.age || user.age,
+        // });
       }
     } catch (error) {
       res.status(500).json({
@@ -49,7 +51,7 @@ export default class SessionsController {
 
   async postRegister(req, res) {
     try {
-      res.status(200).redirect("/login");
+      res.status(200).send({message: "Successfully registered user"});
     } catch (error) {
     console.log("🚀 ~ file: sessions.controller.js:54 ~ SessionsController ~ postRegister ~ error:", error)
       res.status(400).send({

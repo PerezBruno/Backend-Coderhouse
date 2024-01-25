@@ -27,7 +27,7 @@ class cartsRoutes {
     this.router.post(
       `${this.path}/:cartId/products/:productId`,
       passportError(`jwt`),
-      authorization(["User"]),
+      authorization(["User", "Admin"]),
       this.cartController.addProductInCartById
     );
 
