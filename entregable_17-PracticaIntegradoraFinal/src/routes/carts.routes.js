@@ -19,7 +19,8 @@ class cartsRoutes {
     //Obtiene los productos del carrito indicado con el cartID
     this.router.get(
       `${this.path}/:cartId`,
-
+      passportError(`jwt`),
+      authorization(["User"]),
       this.cartController.getProductInCartById
     );
 
@@ -35,7 +36,7 @@ class cartsRoutes {
     this.router.delete(
       `${this.path}/:cartId`,
       passportError(`jwt`),
-      authorization("User"),
+      authorization(["User"]),
       this.cartController.delProductsInCartById
     );
 
@@ -43,7 +44,7 @@ class cartsRoutes {
     this.router.delete(
       `${this.path}/:cartId/products/:productId`,
       passportError(`jwt`),
-      authorization("User"),
+      authorization(["User"]),
       this.cartController.delProductsByIdInCartById
     );
 

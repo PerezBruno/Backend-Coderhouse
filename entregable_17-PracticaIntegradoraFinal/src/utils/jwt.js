@@ -4,8 +4,6 @@ import { JWT_SECRET } from "../config/config.js";
 
 export const generateToken = user =>{
 
-  // const token = jwt.sign({user}, JWT_SECRET, {expiresIn: "12h"});
-    //const token = jwt.sign({user}, `${JWT_SECRET}`, {expiresIn: "12h"}); //TODO: verificar por qué no funciona!!!????********
     const token = jwt.sign({user}, `claveCoderhouse`, {expiresIn: "12h"});
 
     return token;
