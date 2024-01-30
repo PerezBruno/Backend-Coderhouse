@@ -8,7 +8,6 @@ export default class CartController {
     const { cartId } = req.params;
     try {
       const products = await cartsModel.findById(cartId);
-
       if (products)
         res.status(200).send({
           message: `Products in the cart ${cartId}`,

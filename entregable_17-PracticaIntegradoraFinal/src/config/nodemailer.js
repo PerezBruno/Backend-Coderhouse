@@ -6,7 +6,7 @@ export const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "brunoleandroperez.test01@gmail.com",
+    user: EMAIL_USER,
     pass: PASSWORD_EMAIL,
     authMethod: "LOGIN",
   },
@@ -32,4 +32,24 @@ export const sendRecoveryMail = (email, recoveryLinc)=>{
   })
 }
 
-export default transporter;
+export const sendPurchaseDetail = (email,data)=>{
+  const mailOptions = {
+    from: EMAIL_USER,
+    to: email,
+    subject: "Gracias por tu compra!",
+    html: `
+                <h1>Tu pago fué realizado con éxito!</h1>
+                <br>
+                <p>En los próximos días te llegará la factura</p>
+                <br>
+                <p>Esperamos que disfrutes tu compra.</p>
+
+            `       
+  }
+  transporter.sendMail(mailOptions, (error, info)=>{
+    if(error)
+    console.log("🚀 ~ file: nodemailer.js:30 ~ transporter.sendMail ~ error:", error)
+    else
+      console.log("email enviado correctamente")
+  })
+}

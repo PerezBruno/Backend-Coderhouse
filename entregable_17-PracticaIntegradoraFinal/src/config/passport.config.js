@@ -18,10 +18,13 @@ const initializePassport = () =>{
 
          //configuración de la estrategia JWT
 
-         const cookieExtractor = req => {
+        const cookieExtractor = req => {
+            if(req.cookies.cookieToken){
+                const token = req.cookies.cookieToken ? req.cookies.cookieToken:{};
+            }
             const token = req.headers.authorization ? req.headers.authorization:{};
-            console.log("🚀 ~ cookieExtractor ~ token:", token)
-            return token    
+            const finalToken = token.split(' ')[1];
+            return finalToken    
 
             // const tokenViejo = req.cookies.cookieToken ? req.cookies.cookieToken : {}
             // console.log("🚀 ~ cookieExtractor ~ tokenViejo:", tokenViejo)

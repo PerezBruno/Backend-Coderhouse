@@ -84,7 +84,7 @@ class cartsRoutes {
     this.router.post(
       `${this.path}/:cartId/purchase`,
       passportError(`jwt`),
-      authorization("User"), this.ticketController.postBuy)
+      authorization(["User"]), this.ticketController.postBuy)
   }
 }
 

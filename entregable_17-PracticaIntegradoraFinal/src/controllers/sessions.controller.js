@@ -42,7 +42,7 @@ export default class SessionsController {
   async getLogout(req, res) {
     if (req.session.user) {
       req.session.destroy((err) => {
-        if (!err) return res.redirect("/login");
+        if (!err)
         res.send({ message: `logout Error`, body: err });
       });
     }
