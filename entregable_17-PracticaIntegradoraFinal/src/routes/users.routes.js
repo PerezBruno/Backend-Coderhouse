@@ -2,20 +2,24 @@ import { Router } from "express";
 import { createHashValue } from "../utils/bcrypt.js";
 import { authorization, passportError } from "../utils/messagesError.js";
 import UserController from "../controllers/users.controller.js";
+import SessionsController from "../controllers/sessions.controller.js";
 
 class usersRoutes {
   path = "/users";
   router = Router();
   userController;
+  sessionControllers;
 
   constructor() {
     this.userController = new UserController();
+    this.sessionControllers = new SessionsController();
     this.initUsersRoutes();
   }
   initUsersRoutes() {
     this.router.get(
       `${this.path}`,
-
+      passportError(`jwt`),
+      authorization(["Admin"]),
       this.userController.getUsers
     );
 
@@ -29,7 +33,7 @@ class usersRoutes {
     this.router.put(
       `${this.path}/:userId`,
       passportError(`jwt`),
-      authorization("Admin", "User"),
+      authorization(["Admin", "User"]),
       this.userController.updateUserById
     );
 
@@ -37,6 +41,14 @@ class usersRoutes {
       `${this.path}/:userId`,
       this.userController.deleteUserById
     );
+
+    this.router.delete(
+      `${this.path}`,
+      passportError(`jwt`),
+      authorization(["Admin"]),
+      this.sessionControllers.deleteOfflineUsers
+    );
+
 
     this.router.post(
       `${this.path}/password-recovery`,

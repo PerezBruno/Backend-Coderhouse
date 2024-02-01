@@ -53,3 +53,20 @@ export const sendPurchaseDetail = (email,data)=>{
       console.log("email enviado correctamente")
   })
 }
+
+export const userDeletionNotice = (email)=>{
+  const mailOptions = {
+    from: EMAIL_USER,
+    to: email,
+    subject: "Tu cuenta ha sido eliminada!",
+    html: `
+                <h1>Debido a la inactividad, tu cuenta ha sido eliminada.</h1>
+            `       
+  }
+  transporter.sendMail(mailOptions, (error, info)=>{
+    if(error)
+    console.log("🚀 ~ file: nodemailer.js:30 ~ transporter.sendMail ~ error:", error)
+    else
+      console.log("email enviado correctamente")
+  })
+}

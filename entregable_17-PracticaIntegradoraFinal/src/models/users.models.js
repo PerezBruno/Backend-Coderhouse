@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { cartsModel } from "./carts.models.js"
+import { cartsModel } from "./carts.models.js";
 
 const userSchema = new Schema({
   first_name: {
@@ -9,7 +9,7 @@ const userSchema = new Schema({
   last_name: {
     type: String,
     required: true,
-    index: true
+    index: true,
   },
   age: {
     type: Number,
@@ -30,18 +30,25 @@ const userSchema = new Schema({
   },
   cart: {
     type: Schema.Types.ObjectId,
-    ref: "carts"
+    ref: "carts",
+  },
+  last_connection: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+userSchema.pre("save", async function (next) {
+  try {
+    const newCart = await cartsModel.create({});
+    this.cart = newCart._id;
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: users.models.js:41 ~ userSchema.pre ~ error:",
+      error
+    );
+    next(error);
   }
 });
 
-userSchema.pre("save", async function(next){
-  try {
-    const newCart = await cartsModel.create({})
-    this.cart = newCart._id
-  } catch (error) {
-    console.log("🚀 ~ file: users.models.js:41 ~ userSchema.pre ~ error:", error)
-    next(error)
-  }
-})
-
-export const UsersModel = model('users', userSchema)
+export const UsersModel = model("users", userSchema);
