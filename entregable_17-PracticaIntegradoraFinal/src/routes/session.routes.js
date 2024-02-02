@@ -30,10 +30,10 @@ class SessionRoutes {
       this.sessionsController.postRegister
     );
 
-    this.router.post(
-      `${this.path}/update`,
-      this.sessionsController.postUpdatePassword
-    );
+    // this.router.post(
+    //   `${this.path}/update`,
+    //   this.sessionsController.postUpdatePassword
+    // );
 
     //***********registro ususario mediante GithubStrategi ***********/
 

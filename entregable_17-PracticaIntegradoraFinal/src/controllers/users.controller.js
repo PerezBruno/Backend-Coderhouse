@@ -10,7 +10,7 @@ export default class UserController {
   constructor() {}
 
 
- // ********************* Esta ruta trae a todos los usuarios completos *****************
+ //********************* Esta ruta trae a todos los usuarios completos *****************
   async getUsers(req, res) {
     try {
       const users = await UsersModel.find({});
@@ -38,7 +38,8 @@ export default class UserController {
   //       const data = users.map(user => ({
   //         first_name: user.first_name,
   //         last_name: user.last_name,
-  //         email: user.email
+  //         email: user.email,
+  //         role: user.role
   //     }));
   //       return res.status(200).send({
   //         message: "Get all users successfully",
@@ -136,57 +137,15 @@ export default class UserController {
     }
   }
 
-
-//   async deleteInactiveUsers (req, res){
-//     try {
-//         //Obtener usuarios inactivos en los últimos 2 días
-//         const limiteInactividad = new Date();
-//         limiteInactividad.setDate(limiteInactividad.getDate() - 2);
-
-//         /*
-//         30 minutos de inactividad para probar
-//         const limiteInactividad = new Date();
-//         limiteInactividad.setMinutes(limiteInactividad.getMinutes() - 30);
-//         */
-
-//         const usuariosInactivos = await UsersModel.find({ last_connection: { $lt: limiteInactividad } });
-
-//         if (usuariosInactivos.length > 0) {
-//             //Enviar correos electrónicos de notificación y eliminar usuarios
-//             for (const usuario of usuariosInactivos) {
-//                 await nodemailer.sendAccountDeletionMail(usuario.email);
-//                 await UsersModel.findByIdAndDelete(usuario._id);
-//             }
-
-//             return res.status(200).send({ mensaje: "Usuarios inactivos eliminados y notificados correctamente" });
-//         }
-
-//         res.status(400).send({ error: "No hay usuarios inactivos para eliminar" });
-//     } catch (error) {
-//         res.status(500).send({ error: `Error en eliminar usuarios inactivos: ${error}` });
-//     }
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  async deleteAllUsersUser(req, res){
+    try {
+      await UsersModel.deleteMany({"role":"User"})
+      res.status(200).send({message: `users deleted successfully`});
+    } catch (error) {
+      res.status(500).send({message: `error deleting users - ${error}`});
+      
+    }
+  }
 
 
 
@@ -233,7 +192,9 @@ export default class UserController {
           .send(`Invalid or expired token. Please request a new link`);
       }
     } catch (error) {
-      res.status(500).send(`error resetting password - ${error}`);
+      res.status(500).send({message: `error resetting password - ${error}`});
     }
   }
+
+
 }

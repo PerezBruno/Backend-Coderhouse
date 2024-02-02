@@ -1,7 +1,23 @@
 import { ProductsModel } from "../models/products.models.js";
+import multer from "multer";
+import storage from "../config/multer.config.js";
 
 export default class ProductController {
-  constructor() {}
+
+
+  constructor() {
+
+  }
+  uploadFile(req, res, next){
+      const upload = multer(storage).single('image')
+      upload(req, res, function(error){
+        if(error){
+          res.json({message:"error cargando archivo", error})
+        }
+        return next()
+      })
+  
+    }
 
   async getProducts(req, res) {
     let { limit, page, sort, filter } = req.query;
@@ -63,11 +79,19 @@ export default class ProductController {
   }
 
   async addProduct(req, res) {
-    const { title, description, price, thumbnail, code, stock, category } =
+    let product
+    const { title, description, price,
+       thumbnail,
+        code, stock, category } =
       req.body;
-
     try {
-      const product = await ProductsModel.create({
+      console.log("test1", thumbnail)
+      console.log("test2", req.file.filename)
+
+      if(req.file && req.file.filename){
+        thumbnail = req.file.filename;
+      }
+      product = await ProductsModel.create({
         title,
         description,
         price,
@@ -162,5 +186,16 @@ export default class ProductController {
         error,
       });
     }
+  }
+
+  async uploasProductDocument(req, res, next){
+  //  const upload = multer(storage).single('thumbnail')
+    upload(req, res, function(error){
+      if(error){
+        res.json({message:error})
+      }
+      return next()
+    })
+
   }
 }

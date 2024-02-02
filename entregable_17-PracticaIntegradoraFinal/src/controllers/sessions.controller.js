@@ -6,36 +6,6 @@ import { generateToken } from "../utils/jwt.js";
 export default class SessionsController {
   constructor() {}
 
-  disconnectionTimeCalculation(last_connection) {
-    if (!last_connection) {
-      return null;
-    }
-
-    // Obtiene la fecha actual
-    const date = new Date();
-    console.log(
-      "🚀 ~ SessionsController ~ disconnectionTimeCalculation ~ date:",
-      date
-    );
-
-    // Calcula la diferencia en milisegundos
-    const tiempoTranscurrido = date - new Date(last_connection);
-    console.log(
-      "🚀 ~ SessionsController ~ disconnectionTimeCalculation ~ tiempoTranscurrido:",
-      tiempoTranscurrido
-    );
-
-    // Convierte la diferencia a segundos
-    const segundosTranscurridos = tiempoTranscurrido / 1000;
-    console.log(
-      "🚀 ~ SessionsController ~ disconnectionTimeCalculation ~ segundosTranscurridos:",
-      segundosTranscurridos
-    );
-
-    // Puedes ajustar la lógica según tus necesidades para devolver el tiempo en el formato deseado
-    return segundosTranscurridos;
-  }
-
   async postLogin(req, res) {
     try {
       if (!req.user) {
@@ -49,12 +19,7 @@ export default class SessionsController {
         //   email: req.user.email,
         //   age: req.user.age,
         // };
-        let test = Date();
-        console.log("🚀 ~ SessionsController ~ postLogin ~ test:", test);
         let test2 = Date.now();
-        console.log("🚀 ~ SessionsController ~ postLogin ~ test2:", test2);
-        let test3 = new Date();
-        console.log("🚀 ~ SessionsController ~ postLogin ~ test3:", test3);
 
         let user = await UsersModel.findByIdAndUpdate(req.user._id, {
           last_connection: test2,
@@ -170,26 +135,30 @@ export default class SessionsController {
   async deleteOfflineUsers(req, res) {
     // const users = await UsersModel.findById("65bac184a5d3939fb03699e6")
     // console.log("🚀 ~ SessionsController ~ deleteOfflineUsers ~ users:", users)
-
-    const users = await UsersModel.find({});
-    for (let user of users) {
-      const now = Date.now();
-      let lastConnection = user.last_connection;
-      let data = (now - lastConnection) / (1000 * 60 * 60); //devuelve el tiempo de desconexion en horas
-      // console.log("🚀 ~ deleteOfflineUsers ~ data:", data);
-      // console.log("🚀 ~ deleteOfflineUsers ~ data:", user.first_name)
-      if (data < 48) {
-        let userId = `${user._id}`;
-        let email = user.email
-        //console.log("🚀 ~ SessionsController ~ deleteOfflineUsers ~ email:", email)
-        const deleteUser = await UsersModel.findByIdAndDelete(user._id);
-        userDeletionNotice(email)
-      }
+try {
+  const users = await UsersModel.find({});
+  for (let user of users) {
+    const now = Date.now();
+    let lastConnection = user.last_connection;
+    let data = (now - lastConnection) / (1000 * 60 * 60); //devuelve el tiempo de desconexion en horas
+    // console.log("🚀 ~ deleteOfflineUsers ~ data:", data);
+    // console.log("🚀 ~ deleteOfflineUsers ~ data:", user.first_name)
+    if (data > 48) {
+      let userId = `${user._id}`;
+      let email = user.email
+      //console.log("🚀 ~ SessionsController ~ deleteOfflineUsers ~ email:", email)
+      const deleteUser = await UsersModel.findByIdAndDelete(user._id);
+      userDeletionNotice(email)
     }
-    return res
-      .status(200)
-      .send({
-        message: "Users removed and notified correctly",
-      });
+  }
+  return res
+    .status(200)
+    .send({
+      message: "Users removed and notified correctly",
+    });
+} catch (error) {
+  return res.status(500).send({message: "Error deleting inactive", error})
+}
+    
   }
 }

@@ -16,44 +16,45 @@ class usersRoutes {
     this.initUsersRoutes();
   }
   initUsersRoutes() {
+    this.router.delete(
+      `${this.path}/all`,
+      passportError(`jwt`),
+      authorization("Admin"),
+      this.userController.deleteAllUsersUser
+    );
+
     this.router.get(
       `${this.path}`,
       passportError(`jwt`),
-      authorization(["Admin"]),
+      authorization("Admin"),
       this.userController.getUsers
     );
 
     this.router.get(
       `${this.path}/:userId`,
       passportError(`jwt`),
-      authorization(["Admin", "User"]),
+      authorization("Admin"),
       this.userController.getUserById
     );
 
     this.router.put(
       `${this.path}/:userId`,
       passportError(`jwt`),
-      authorization(["Admin", "User"]),
+      authorization("Admin"),
       this.userController.updateUserById
     );
 
     this.router.delete(
       `${this.path}/:userId`,
+      passportError(`jwt`),
+      authorization("Admin"),
       this.userController.deleteUserById
     );
-
-    this.router.delete(
-      `${this.path}`,
-      passportError(`jwt`),
-      authorization(["Admin"]),
-      this.sessionControllers.deleteOfflineUsers
-    );
-
 
     this.router.post(
       `${this.path}/password-recovery`,
       passportError(`jwt`),
-      authorization(["Admin", "User"]),
+      authorization("User"),
       this.userController.recoveryPassword
     ); //enviar mail
 
@@ -62,6 +63,13 @@ class usersRoutes {
       passportError(`jwt`),
       this.userController.resetPassword
     ); //cambiar contraseña
+
+    this.router.delete(
+      `${this.path}`,
+      passportError(`jwt`),
+      authorization("Admin"),
+      this.sessionControllers.deleteOfflineUsers
+    );
   }
 }
 

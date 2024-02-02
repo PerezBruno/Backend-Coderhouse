@@ -20,7 +20,7 @@ class cartsRoutes {
     this.router.get(
       `${this.path}/:cartId`,
       passportError(`jwt`),
-      authorization(["User"]),
+      authorization("User"),
       this.cartController.getProductInCartById
     );
 
@@ -28,7 +28,7 @@ class cartsRoutes {
     this.router.post(
       `${this.path}/:cartId/products/:productId`,
       passportError(`jwt`),
-      authorization(["User", "Admin"]),
+      authorization("User"),
       this.cartController.addProductInCartById
     );
 
@@ -36,7 +36,7 @@ class cartsRoutes {
     this.router.delete(
       `${this.path}/:cartId`,
       passportError(`jwt`),
-      authorization(["User"]),
+      authorization("User"),
       this.cartController.delProductsInCartById
     );
 
@@ -44,7 +44,7 @@ class cartsRoutes {
     this.router.delete(
       `${this.path}/:cartId/products/:productId`,
       passportError(`jwt`),
-      authorization(["User"]),
+      authorization("User"),
       this.cartController.delProductsByIdInCartById
     );
 
@@ -84,7 +84,7 @@ class cartsRoutes {
     this.router.post(
       `${this.path}/:cartId/purchase`,
       passportError(`jwt`),
-      authorization(["User"]), this.ticketController.postBuy)
+      authorization("User"), this.ticketController.postBuy)
   }
 }
 
