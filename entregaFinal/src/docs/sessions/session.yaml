@@ -1,0 +1,100 @@
+paths:
+  /api/session/register:
+    post:
+      summary: Register a user
+      tags:
+        - Sessions
+      requestBody:
+        required: True
+        content:
+          aplication/json:
+            schema:
+              $ref: '#/components/requestBodies/User'
+      # parameters:
+        # - name: body
+        #   in: body
+        #   required: true
+        #   schema:
+        #     $type: object
+        #     properties:
+        #       first_name: 
+        #         type: string
+        #       last_name:
+        #         type: string
+        #       email:
+        #         type: string
+        #       age:
+        #         type: number
+        #       password:
+        #         type: string
+      responses:
+        '200':
+          description: Successfully created user
+          content:
+            aplication/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Users'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+
+    Users:
+      type: object
+      properties:
+        first_name: 
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        age:
+          type: number
+        password:
+          type: string
+      example:
+        first_name: Hello
+        last_name: WWord
+        email: hello@word.com
+        age: 50
+        password: JDPinpdiobnsdnbpxdib662498
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+      example:
+        message: Error message
+
+
+  requestBodies:
+    User:
+      type: object
+      description: User data to register
+      properties:
+        first_name: 
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        age:
+          type: number
+        password:
+          type: string
+      example:
+        first_name: Hello
+        last_name: WWord
+        email: hello@word.com
+        age: 50
+        password: JDPinpdiobnsdnbpxdib662498
